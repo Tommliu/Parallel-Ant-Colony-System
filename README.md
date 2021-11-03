@@ -1,5 +1,7 @@
 15618 Final Project (Parallel Ant Colony System)
 
+By Minghao Liu and Ziteng Shu
+
 ## SUMMRY
 Summarize your project in no more than 2-3 sentences. Describe what you plan
 to do and what parallel systems you will be working with. Example one-liners include (you
