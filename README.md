@@ -1,4 +1,4 @@
-15618 Final Project (Parallel Ant Colony System)
+15618 Final Project (Parallel Ant Colony System (Optimization))
 
 By Minghao Liu and Ziteng Shu
 
