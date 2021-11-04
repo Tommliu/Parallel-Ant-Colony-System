@@ -2,17 +2,30 @@
 
 By Minghao Liu and Ziteng Shu
 
-## SUMMRY
-Summarize your project in no more than 2-3 sentences. Describe what you plan
-to do and what parallel systems you will be working with. Example one-liners include (you
-should add a bit more detail)
+## SUMMARY
+We are going to implement multiple versions of parallel implementations of the Ant Colony Optimization(ACO) on multi-core CPU platforms, compare and analyze the trade-off and performance across these methods. OpenMP and OpenMPI will be used in this project.
+As various approaches(parallel models) have been conducted with different emphasis.
+A detailed analysis will be useful and necessary. Here in this project, we are considering three factors: number of colonies, cooperation mode and granularity.
+
 
 
 ## BACKGROUND
-If your project involves accelerating a compute-intensive application, describe the application or piece of the application you are going to implement in more
-detail. This description need only be a few paragraphs. It might be helpful to include a
-block diagram or pseudocode of the basic idea. An important detail is what aspects of the
-problem might benefit from parallelism and why?
+**Algorithm explanation**:
+The Ant Colony Optimization is a class of optimization algorithms that was modeled by the behavior of real ants.  Artificial 'ants' (e.g. simulation agents) locate optimal solutions by moving through a parameter space representing all possible solutions. And ants will leave pheromones to influence the exploration of others. The evaluation of the solution will decide how pheromones are preserved. The application that built on the algorithm will be the classic Travelling salesman problem (Vehicle routing problem). Given a graph of cities with different weights on the edge (distance), we should find the approximate optimal solution in this sense. The high level pseudocode is as following:
+
+```
+procedure ACO_MetaHeuristic is
+    while not terminated do
+        generateSolutions()
+        daemonActions()
+        pheromoneUpdate()
+    repeat
+end procedure
+```
+The generateSolutions() function will mainly take advantage of some heuristic function to generate a path. The dameonActions() function will mainly compare the paths found by different “ants”. Finally the pheromoneUpdate() function will update the pheromone information that is shared across the “ants”.  Since the ant colony algorithm relies on “ants” exploring a large search space, the computation is too heavy for the sequential implementation. Thus, parallel design should naturally fit into the implementation. Following is a graph of categorized different Ant colony Optimization on CPU. Our project will focus on implementing and analyzing these approaches.
+
+![A hierarchical view of parallel approaches]()
+
 
 ## CHALLENGE 
 Describe why the problem is challenging. What aspects of the problem
