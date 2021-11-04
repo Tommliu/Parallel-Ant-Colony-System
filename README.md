@@ -26,7 +26,7 @@ end procedure
 ```
 The generateSolutions() function will mainly take advantage of some heuristic function to generate a path. The dameonActions() function will mainly compare the paths found by different “ants”. Finally the pheromoneUpdate() function will update the pheromone information that is shared across the “ants”.  Since the ant colony algorithm relies on “ants” exploring a large search space, the computation is too heavy for the sequential implementation. Thus, parallel design should naturally fit into the implementation. Following is a graph of categorized different Ant colony Optimization on CPU. Our project will focus on implementing and analyzing these approaches.
 
-<img src="https://github.com/Tommliu/Parallel-Ant-Colony-System/blob/gh-pages/Hierarchy_Parallel_ACO.png">
+<img src="./Hierarchy_Parallel_ACO.png">
 
 There are three major factors in the parallel design: #colonies, cooperation mode and granularity. From the perspective of parallel problems, cooperation is a crucial design choice that could greatly affect the performance. Some evaluation metrics include Computational efficiency, speedup and quality of the results.
 
