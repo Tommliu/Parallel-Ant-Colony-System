@@ -26,6 +26,11 @@ The generateSolutions() function will mainly take advantage of some heuristic fu
 
 ![A hierarchical view of parallel approaches](https://github.com/Tommliu/Parallel-Ant-Colony-System/blob/gh-pages/Hierarchy_Parallel_ACO%20.png)
 
+There are three major factors in the parallel design: #colonies, cooperation mode and granularity. From the perspective of parallel problems, cooperation is a crucial design choice that could greatly affect the performance. Some evaluation metrics include Computational efficiency, speedup and quality of the results.
+
+**Master-slave model**. This category applies a hierarchical parallel model, where a master process manages the global information(i.e. pheromone matrix, best-so-far solution, etc.) and it also controls a group of slave processes that perform subordinated tasks,related to the ACO search space exploration. The model includes three distinguished subcategories regarding the granularity.
+
+**Cellular model**. A single colony is structured in small neigh-borhoods, each one with its own pheromone matrix. Each ant is placed in a cell in a toroidal grid, and the trail pheromone update in each matrix considers only the solutions constructed by the ants in its neighborhood. The model uses overlapping neighborhoods, so the effect of finding high-quality solutions gradually spreads to other neighborhoods using the diffusion model employed in cellular evolutionary algorithms
 
 ## CHALLENGE 
 1.  Since our project is focusing on analyzing various parallel models based on OpenMP and OpenMPI. There will be plenty of implementation requirements throughout the process. Table 1 describes the models we are going to implement.
