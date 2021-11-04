@@ -1,4 +1,4 @@
-# 15618 Final Project (Parallel Ant Colony Optimization)
+# Parallel Ant Colony Optimization
 
 By Minghao Liu and Ziteng Shu
 
