@@ -28,9 +28,20 @@ The generateSolutions() function will mainly take advantage of some heuristic fu
 
 
 ## CHALLENGE 
-Describe why the problem is challenging. What aspects of the problem
-might make it difficult to parallelize? In other words, what to you hope to learn by doing
-the project?
+1.  Since our project is focusing on analyzing various parallel models based on OpenMP and OpenMPI. There will be plenty of implementation requirements throughout the process. Table 1 describes the models we are going to implement.
+| Model                     | Population organization       | \# Colonies | \# Pheromone matrices | Communication frequency |
+| ------------------------- | ----------------------------- | ----------- | --------------------- | ----------------------- |
+| Coarse-grain master-slave | Hierarchical, non-cooperative | One         | One                   | Medium                  |
+| Medium-grain master-slave | Hierarchical, non-cooperative | One         | One                   | Medium-High             |
+| Fine-grain master-slave   | Hierarchical, non-cooperative | One         | One                   | High                    |
+| Cellular                  | Structured, cooperative       | One         | Many                  | Medium                  |
+| Parallel independent runs | Distributed, non-cooperative  | Several     | Several               | Zero                    |
+| Multicolony               | Distributed, cooperative      | Several     | Several               | Low                     |
+| Hybrids                   | Hierarchical                  | D/P         | D/P                   | D/P                     |
+
+2.  As is stated in the ACO, the pheromone is shared across the colonies through the graph. During cooperation mode, how to share and update the pheromone effectively by shared memory model and message passing model is a challenge.
+
+3. For OpenMPI, we have limited cores. How to design the colony size and divide the workload is one of the crucial factors that affect the computation performance.
 
 ## RESOURCES
 Describe the resources (type of computers, starter code, etc.) you will use.
