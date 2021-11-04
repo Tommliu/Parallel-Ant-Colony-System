@@ -29,6 +29,7 @@ The generateSolutions() function will mainly take advantage of some heuristic fu
 
 ## CHALLENGE 
 1.  Since our project is focusing on analyzing various parallel models based on OpenMP and OpenMPI. There will be plenty of implementation requirements throughout the process. Table 1 describes the models we are going to implement.
+
 | Model                     | Population organization       | \# Colonies | \# Pheromone matrices | Communication frequency |
 | ------------------------- | ----------------------------- | ----------- | --------------------- | ----------------------- |
 | Coarse-grain master-slave | Hierarchical, non-cooperative | One         | One                   | Medium                  |
