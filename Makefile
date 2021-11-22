@@ -25,9 +25,20 @@ $(BUILD)/obj/%.o: src/%.cpp
 $(APP_NAME): $(BUILD)/bin/$(APP_NAME)
 
 OBJS = $(BUILD)/obj/dataloader.o \
+	   $(BUILD)/obj/model.o \
+	   $(BUILD)/obj/ant.o \
+	   $(BUILD)/obj/path.o \
+	   $(BUILD)/obj/random.o \
+	   $(BUILD)/obj/tabu.o \
        $(BUILD)/obj/main.o
 
 $(BUILD)/bin/$(APP_NAME): $(OBJS)
 	$(QUIET_ECHO) $@: Building executable
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ $^
+
+
+.PHONY: clean
+clean:
+	$(QUIET_ECHO) $(BUILD): Cleaning
+	@ rm -rf $(BUILD)

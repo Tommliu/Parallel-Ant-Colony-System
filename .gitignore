@@ -1,4 +1,6 @@
 .idea
 build
+output
 *.a
 *.o
+*.png

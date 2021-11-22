@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include "dataloader.h"
+#include "model.h"
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
@@ -12,6 +13,9 @@ int main(int argc, char *argv[]) {
     char *input_filename = NULL;
     double UNUSED alpha = 0.1;
     int opt = 0;
+
+    int number_of_ants = 100, max_iteration = 5;
+    double initial_alpha = 0.1, initial_beta = 0.1, initial_q = 1.0, initial_rho = 0.01;
 
     // Read command line arguments
     do {
@@ -43,6 +47,9 @@ int main(int argc, char *argv[]) {
     }
     Dataloader dataloader;
     dataloader.load_data(input_filename);
-    
 
+    // TODO: figure out initial parameters
+    Model aco(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, max_iteration, &dataloader);
+    aco.solve();
+    aco.write_output(input_filename);
 }

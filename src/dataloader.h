@@ -22,7 +22,7 @@ public:
     void load_data(const char *path);
     void print_distances(int a, int b);
 
-    int number_of_cities;
+    int n_cities;
     double **distances;     // N^2
     city_t *cities;     // N
 };

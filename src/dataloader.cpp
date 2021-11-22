@@ -8,7 +8,7 @@ Dataloader::Dataloader() {
 
 Dataloader::~Dataloader() {
     delete []cities;
-    for (int i = 0; i < number_of_cities; i++) {
+    for (int i = 0; i < n_cities; i++) {
         delete [] distances[i];
     }
     delete [] distances;
@@ -26,22 +26,23 @@ void Dataloader::load_data(const char *path) {
     FILE *tsp = fopen(path, "r");
     int UNUSED result;
     // Acquire number of cities from data set
-    result = fscanf(tsp, "%d\n", &number_of_cities);
-    cities = new city_t[number_of_cities];
-    distances = new double*[number_of_cities];
+    result = fscanf(tsp, "%d\n", &n_cities);
+    cities = new city_t[n_cities];
+    distances = new double*[n_cities];
     int tmp;
-    for (int i = 0; i < number_of_cities; i++) {
-        distances[i] = new double[number_of_cities];
+    for (int i = 0; i < n_cities; i++) {
+        distances[i] = new double[n_cities];
         result = fscanf(tsp, "%d %d %d\n", &tmp, &(cities[i].x), &(cities[i].y));
     }
     // TODO: This part can be improved
-    for (int i = 0; i < number_of_cities; i++) {
+    for (int i = 0; i < n_cities; i++) {
         for (int j = 0; j <= i; j++) {
             double dis_ij = distance(i, j);
             distances[i][j] = dis_ij;
             distances[j][i] = dis_ij;
         }
     }
+    fclose(tsp);
 }
 
 void Dataloader::print_distances(int a, int b) {
