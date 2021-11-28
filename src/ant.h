@@ -19,6 +19,10 @@ public:
 
     void update_pheromone(double **phero, double Q, Dataloader *dataloader);
     virtual ~Ant();
+
+    void print_tabu();
+
+
     Path *path;
     Tabu *tabu_list;
     double *probe;

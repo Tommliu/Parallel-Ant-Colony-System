@@ -10,24 +10,27 @@ Path::Path(int number_of_cities) {
 }
 
 Path::~Path() {
+    //printf("[DEBUG]: Start Path\n");
     delete [] route;
+    //printf("[DEBUG]: End Path\n");
+
 }
 
-Path &Path::operator=(const Path &other) {
-    if (this == &other) {
-        return *this;
-    }
-    delete [] route;
-    route = new int[n_cities];
+void Path::copy(Path *other) {
     for (int i = 0; i < n_cities; ++i) {
-        route[i] = other.route[i];
+        route[i] = other->route[i];
     }
-    return *this;
 }
-
+// TODO: Segment fault
 double Path::get_length(Dataloader *dataloader) {
     double sum = 0.0;
     int max_itr = n_cities - 1;
+
+//    for (int i = 0; i < n_cities; ++i) {
+//        printf("%d ", route[i]);
+//    }
+//    printf("\n");
+
     for (int i = 0; i < max_itr; ++i) {
         sum += dataloader->distances[route[i]][route[i+1]];
     }

@@ -28,10 +28,10 @@ public:
     void pheromone_decay();
     void write_output(const char* input_path);
 
-    void solve();
+    void solve(int max_itr);
 
     double best_length;
-    int n_ants, n_cities, max_iter;
+    int n_ants, n_cities;
     /**
      * alpha is Evaporation parameter
      * beta is Expectation Heuristic Factor

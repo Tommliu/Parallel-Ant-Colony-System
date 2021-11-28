@@ -7,11 +7,14 @@ Dataloader::Dataloader() {
 }
 
 Dataloader::~Dataloader() {
+    //printf("[DEBUG]: Start Dataloader\n");
+
     delete []cities;
     for (int i = 0; i < n_cities; i++) {
         delete [] distances[i];
     }
     delete [] distances;
+    //printf("[DEBUG]: END Dataloader\n");
 }
 
 double Dataloader::distance(int a_city, int b_city) {
@@ -36,10 +39,9 @@ void Dataloader::load_data(const char *path) {
     }
     // TODO: This part can be improved
     for (int i = 0; i < n_cities; i++) {
-        for (int j = 0; j <= i; j++) {
+        for (int j = 0; j < n_cities; j++) {
             double dis_ij = distance(i, j);
             distances[i][j] = dis_ij;
-            distances[j][i] = dis_ij;
         }
     }
     fclose(tsp);
