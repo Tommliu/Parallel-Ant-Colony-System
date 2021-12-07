@@ -2,7 +2,7 @@ BUILD = build
 QUIET_ECHO = @ echo
 APP_NAME = aco
 CXX = g++ -m64 -std=c++11
-CXXFLAGS = -I. -O3 -Wall
+CXXFLAGS = -I. -O3 -Wall -fopenmp -Wno-unknown-pragmas
 
 
 .PHONY: all

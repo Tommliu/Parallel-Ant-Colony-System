@@ -146,6 +146,7 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
         printf("[ERROR]:failed to open output file\n");
     }
     fprintf(fp, "NAME: %s\n", test_name.c_str());
+    fprintf(fp, "DISTANCE: %d\n", global_best_length);
     fprintf(fp, "DIMENSION: %d\n", n_cities);
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {

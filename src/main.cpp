@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
                 max_iteration = atoi(optarg);
                 break;
             case 'c':
-                max_iteration = atoi(optarg);
+                n_cores = atoi(optarg);
                 break;
             case -1:
                 break;
