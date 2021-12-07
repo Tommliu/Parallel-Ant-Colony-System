@@ -30,6 +30,7 @@ OBJS = $(BUILD)/obj/dataloader.o \
 	   $(BUILD)/obj/path.o \
 	   $(BUILD)/obj/random.o \
 	   $(BUILD)/obj/tabu.o \
+	   $(BUILD)/obj/timer.o \
        $(BUILD)/obj/main.o
 
 $(BUILD)/bin/$(APP_NAME): $(OBJS)

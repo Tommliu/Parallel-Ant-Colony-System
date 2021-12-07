@@ -106,7 +106,7 @@ void Model::solve(int max_iter) {
     }
 }
 
-void Model::write_output(const char* UNUSED input_path) {
+void Model::write_output(const char* UNUSED input_path, int n_cores, double duration_time) {
     int result = access("./output", F_OK);
     if (result) {
         int res = mkdir("./output", 0755);
@@ -114,14 +114,37 @@ void Model::write_output(const char* UNUSED input_path) {
             printf("[ERROR]: Create directory %d\n", errno);
         }
     }
-    FILE *fp = fopen("./output/vlsi_output.tsp", "w");
+    std::string test_path = std::string(input_path);
+    size_t pos1 = test_path.find("tests");
+    size_t pos2 = test_path.find(".tsp");
+    size_t test_name_length = pos2 - pos1 - 6;
+    std::string test_name = test_path.substr(pos1+6, test_name_length);
+
+    std::string test_dir_name = "./output/" + test_name + "/";
+    std::string output_path = test_dir_name + "output_" + std::to_string(n_cores);
+    std::string profile_path = test_dir_name + "profile";
+    result = access(test_dir_name.c_str(), F_OK);
+    if (result) {
+        int res = mkdir(test_dir_name.c_str(), 0755);
+        if (res) {
+            printf("[ERROR]: Create directory %d\n", errno);
+        }
+    }
+
+    FILE *fp_profile = fopen(profile_path.c_str(), "a+");
+    if (fp_profile == nullptr) {
+        printf("[ERROR]:failed to open output file\n");
+    }
+    fprintf(fp_profile, "COMPUTATION TIME (%d) : %lf\n", n_cores, duration_time);
+    fprintf(fp_profile, "TOUR_LENGTH (%d) : %lf\n", n_cores, global_best_length);
+
+    fclose(fp_profile);
+
+    FILE *fp = fopen(output_path.c_str(), "w");
     if (fp == nullptr) {
         printf("[ERROR]:failed to open output file\n");
     }
-    fprintf(fp, "NAME: xqf131\n");
-    fprintf(fp, "DATASET: VLSI\n");
-    fprintf(fp, "TOUR LENGTH: %f\n", global_best_length);
-    fprintf(fp, "COMPUTATION TIME: 10\n");
+    fprintf(fp, "NAME: %s\n", test_name.c_str());
     fprintf(fp, "DIMENSION: %d\n", n_cities);
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {

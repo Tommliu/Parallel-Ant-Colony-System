@@ -6,16 +6,16 @@
 #include <unistd.h>
 #include "dataloader.h"
 #include "model.h"
+#include "timer.h"
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
-    int UNUSED numIterations = 1;
     char *input_filename = NULL;
-    double UNUSED alpha = 0.1;
     int opt = 0;
 
     int number_of_ants = 200, max_iteration = 200;
-    double initial_alpha = 3.0, initial_beta = 4.0, initial_q = 100.0, initial_rho = 0.3;
+    double alpha = 3.0, beta = 4.0, q = 100.0, rho = 0.3;
+    int UNUSED n_cores = 1;
 
     // Read command line arguments
     do {
@@ -24,15 +24,27 @@ int main(int argc, char *argv[]) {
             case 'f':
                 input_filename = optarg;
                 break;
-
             case 'a':
                 alpha = atof(optarg);
                 break;
-
-            case 'i':
-                numIterations = atoi(optarg);
+            case 'b':
+                beta = atof(optarg);
                 break;
-
+            case 'q':
+                q = atof(optarg);
+                break;
+            case 'r':
+                rho = atof(optarg);
+                break;
+            case 'n':
+                number_of_ants = atof(optarg);
+                break;
+            case 'i':
+                max_iteration = atoi(optarg);
+                break;
+            case 'c':
+                max_iteration = atoi(optarg);
+                break;
             case -1:
                 break;
 
@@ -42,17 +54,20 @@ int main(int argc, char *argv[]) {
     } while (opt != -1);
 
     if (input_filename == NULL) {
-        printf("Usage: %s -f <filename> [-a <Alpha>] [-i <N_iters>]\n", argv[0]);
+        printf("Usage: %s -f <filename> [-a <Alpha>] [-b <Beta>] [-q <Q>] [-r <Rho>] [-n <N_Ants>] [-i <N_Iterations>] [-c <N_Cores>]\n", argv[0]);
         return -1;
     }
+    printf("[RUNNING]: %s with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+           input_filename, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
+    Timer timer;
     Dataloader dataloader;
     dataloader.load_data(input_filename);
 
-    // TODO: figure out initial parameters
-    Model aco(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, max_iteration, &dataloader);
-    //printf("Building model\n");
+    timer.start();
+    Model aco(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
     aco.solve(max_iteration);
-    aco.write_output(input_filename);
-    //printf("End write\n");
+    timer.end();
+    aco.write_output(input_filename, n_cores, timer.get_duration_time());
+    printf("[FINISH]: %s with %lf s\n", timer.get_duration_time());
     return 0;
 }

@@ -26,7 +26,7 @@ public:
     void construct_routes();
     void update_pheromone();
     void pheromone_decay();
-    void write_output(const char* input_path);
+    void write_output(const char* input_path, int n_core, double duration_time);
 
     void solve(int max_itr);
 
