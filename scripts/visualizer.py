@@ -35,8 +35,8 @@ def save_image(dataset, filename):
 def plot(positions, dimension, distance, dataset, filename):
     fig, ax = plt.subplots(2, sharex=True, sharey=True)         # Prepare 2 plots
     fig.set_size_inches(16, 8)
-    ax[0].set_title(dataset + 'Raw nodes')
-    ax[1].set_title(dataset + 'Optimized tour')
+    ax[0].set_title(dataset + ' Raw nodes')
+    ax[1].set_title(dataset + ' Optimized tour')
     ax[0].scatter(positions[:, 0], positions[:, 1])             # plot A
     ax[1].scatter(positions[:, 0], positions[:, 1])             # plot B
     start_node = 0
@@ -60,7 +60,7 @@ def plot(positions, dimension, distance, dataset, filename):
 def main(args):
     filepath = args.file
     filename = filepath.strip().split('/')[-1]
-    dataset = filename.split('_')[0]
+    dataset = filepath.strip().split('/')[-2]
     output_file = open(args.file, 'r')
     lines = output_file.readlines()
 
