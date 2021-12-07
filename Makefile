@@ -11,7 +11,7 @@ all: $(APP_NAME)
 # --------------------------------------------------------------------------
 # Compile target patterns
 
-$(BUILD)/obj/%.o: src/%.cpp
+$(BUILD)/obj/%.o: src/sequential/%.cpp
 	$(QUIET_ECHO) $@: Compiling object
 	@ mkdir -p $(dir $(BUILD)/dep/$<)
 	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
@@ -19,6 +19,14 @@ $(BUILD)/obj/%.o: src/%.cpp
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
+
+$(BUILD)/obj/main.o: src/main.cpp
+	$(QUIET_ECHO) $@: Compiling object
+	@ mkdir -p $(dir $(BUILD)/dep/$<)
+	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
+        -o $(BUILD)/dep/$(<:%.cpp=%.d) -c $<
+	@ mkdir -p $(dir $@)
+	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
 .PHONY: $(APP_NAME)

@@ -4,9 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
-#include "dataloader.h"
-#include "model.h"
-#include "timer.h"
+#include "sequential/dataloader.h"
+#include "sequential/model.h"
+#include "sequential/timer.h"
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
