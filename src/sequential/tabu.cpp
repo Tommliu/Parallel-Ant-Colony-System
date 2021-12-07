@@ -10,10 +10,7 @@ Tabu::Tabu(int number_of_cities) {
 }
 
 Tabu::~Tabu() {
-    //printf("[DEBUG]: Start Tabu\n");
-
     delete [] list;
-    //printf("[DEBUG]: End Tabu\n");
 }
 
 void Tabu::reset() {

@@ -4,6 +4,8 @@
 
 #include "model.h"
 #define UNUSED __attribute__((unused))
+Model::Model() {}
+
 Model::Model(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
              double initial_rho, int initial_city, Dataloader *p_dataloader) {
     n_ants = number_of_ants;

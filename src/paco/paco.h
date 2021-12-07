@@ -7,7 +7,10 @@
 #include "../sequential/model.h"
 
 class PACO: public Model{
-
+public:
+    PACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
+         double initial_rho, int max_iteration, Dataloader *p_dataloader);
+    ~PACO();
 };
 
 

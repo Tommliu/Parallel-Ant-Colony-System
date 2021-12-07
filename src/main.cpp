@@ -7,6 +7,7 @@
 #include "sequential/dataloader.h"
 #include "sequential/model.h"
 #include "sequential/timer.h"
+#include "paco/paco.h"
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     // Read command line arguments
     do {
-        opt = getopt(argc, argv, "f:a:i:");
+        opt = getopt(argc, argv, "f:a:b:q:r:n:i:c:m:");
         switch (opt) {
             case 'f':
                 input_filename = optarg;
@@ -62,8 +63,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    printf("[RUNNING]: %s with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
-           input_filename, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
+    printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+           input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
     Timer timer;
     Dataloader dataloader;
     dataloader.load_data(input_filename);
@@ -71,6 +72,9 @@ int main(int argc, char *argv[]) {
     switch (mode) {
         case 0:
             model = new Model(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
+            break;
+        case 1:
+            model = new PACO(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
             break;
         default:
             printf("[ERROR]: No specific mode!\n");
@@ -81,6 +85,7 @@ int main(int argc, char *argv[]) {
     model->solve(max_iteration);
     timer.end();
     model->write_output(input_filename, n_cores, timer.get_duration_time());
+    delete model;
     printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
     return 0;
 }

@@ -18,9 +18,10 @@
 
 class Model {
 public:
-    Model (int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
+    Model();
+    Model(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
            double initial_rho, int max_iteration, Dataloader *p_dataloader);
-    virtual ~Model ();
+    virtual ~Model();
 
     void random_place_ants();
     void construct_routes();
