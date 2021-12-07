@@ -114,6 +114,7 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
             printf("[ERROR]: Create directory %d\n", errno);
         }
     }
+
     std::string test_path = std::string(input_path);
     size_t pos1 = test_path.find("tests");
     size_t pos2 = test_path.find(".tsp");

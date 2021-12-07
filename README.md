@@ -1,22 +1,42 @@
 15618 Final Project (Parallel Ant Colony System)
 
-## Output file format
+## Code Structure
+```
+Parallel-Ant-Colony-System/
+├── build
+├── Makefile
+├── README.md
+├── scripts
+│   ├── profiler.py
+│   ├── requirement.txt
+│   ├── run.sh
+│   └── visualizer.py
+├── src 
+└── test
+    └── VLSI
+    └── <dataset>
+```
+
+## Output file format (./output/\<dataset\>/)
 NAME : ...
 
 DIMENSION : ...
 
+\<output positions\>
+
+...
+
 ## Output profile format
-COMPUTATION TIME :
+COMPUTATION TIME (\<number of cores\>) : 2.3
 
-[baseline]
-
-[core]
+TOUR_LENGTH (\<number of cores\>) : 500
 
 ...
 
 
-## Visualizer
+## Visualizer and profiler
 
 ```
-python3 visualizer.py -f output/test.tsp
+python3 scripts/visualizer.py -f output/<dataset>/<dataset>_<n_cores>
+python3 scripts/profiler.py -f output/<dataset>/<dataset>_profile
 ```
