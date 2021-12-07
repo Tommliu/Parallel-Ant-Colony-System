@@ -114,14 +114,20 @@ void Model::write_output(const char* UNUSED input_path) {
             printf("[ERROR]: Create directory %d\n", errno);
         }
     }
-    FILE *fp = fopen("./output/vlsi_output.tsp", "w");
-    if (fp == nullptr) {
+
+    FILE *fp0 = fopen("./output/xqf131_profile", "a");
+    if (fp0 == NULL) {
+        printf("[ERROR]:failed to open output profile file\n");
+    }
+    // fprintf(fp, "DATASET: VLSI\n");
+    fprintf(fp0, "TOUR LENGTH: %f\n", global_best_length);
+    fprintf(fp0, "COMPUTATION TIME: 10\n");
+
+    FILE *fp = fopen("./output/xqf131_4", "w");
+    if (fp == NULL) {
         printf("[ERROR]:failed to open output file\n");
     }
     fprintf(fp, "NAME: xqf131\n");
-    fprintf(fp, "DATASET: VLSI\n");
-    fprintf(fp, "TOUR LENGTH: %f\n", global_best_length);
-    fprintf(fp, "COMPUTATION TIME: 10\n");
     fprintf(fp, "DIMENSION: %d\n", n_cities);
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {

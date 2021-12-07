@@ -18,5 +18,5 @@ COMPUTATION TIME :
 ## Visualizer
 
 ```
-python3 visualizer.py -f output/test.tsp
+python3 scripts/visualizer.py -f output/<dataset>_<n_cores>
 ```
