@@ -69,7 +69,7 @@ void Model::construct_routes() {
     if (local_best.length < global_best.length) {
         global_best = local_best;
     }
-    local_best.rest();// = static_cast<double>(INT_MAX);
+    local_best.reset();
 }
 
 void Model::pheromone_decay() {

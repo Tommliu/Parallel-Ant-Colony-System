@@ -30,7 +30,11 @@ Solution &Solution::operator=(const Solution &solution) {
     return *this;
 }
 
-void Solution::rest() {
+void Solution::reset() {
     length = static_cast<double>(INT_MAX);
-    iant = -1;
+}
+
+bool Solution::operator< (Solution& solution) {
+    if (length < solution.length) { return true; }
+    else { return false; }
 }

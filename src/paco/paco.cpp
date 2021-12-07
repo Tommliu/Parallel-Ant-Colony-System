@@ -7,30 +7,33 @@ PACO::PACO(int number_of_ants, double initial_alpha, double initial_beta, double
 
 PACO::~PACO(){}
 
-void PACO::construct_routes() {
-    /**
-#pragma omp declare reduction \
-        (minIndex:int4:omp_out=myMin(omp_out, omp_in)) \
-        initializer(omp_priv = int4(100000000, 100000000, 0, 0))
+Solution& myMin(Solution& x, Solution& y) {
+    return x < y ? x : y;
+}
 
-#pragma omp parallel for reduction(minIndex: min_value_index)
+void PACO::construct_routes() {
+
+#pragma omp declare reduction \
+        (minLength:Solution:omp_out=myMin(omp_out, omp_in)) \
+        initializer(omp_priv = Solution())
+
+#pragma omp parallel for reduction(minLength: local_best)
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {
-            int next_city = random->get_next_city(&(ants[i]), (ants[i].path->route)[j-1],
-                                                  n_cities, dataloader, pheromone, alpha, beta);
+            int next_city = random.get_next_city(&(ants[i]), (ants[i].path.route)[j-1],
+                                                 n_cities, dataloader, pheromone, alpha, beta);
             ants[i].visit_city(j, next_city);
         }
         double length = ants[i].get_length(dataloader);
-        if (length < local_best_length) {
-            local_best_length = length;
-            best_route = ants[i].path;
-            best_ant = i;
-        }
+
+        Solution curr_solution(length, i, ants[i].path);
+
+        local_best = myMin(local_best, curr_solution);
+
     }
-    if (local_best_length < global_best_length) {
-        global_best_length = local_best_length;
-        best_route = ants[best_ant].path;
+
+    if (local_best.length < global_best.length) {
+        global_best = local_best;
     }
-    local_best_length = static_cast<double>(INT_MAX);
-     */
+    local_best.reset();
 }

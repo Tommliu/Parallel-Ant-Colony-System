@@ -7,14 +7,12 @@ Dataloader::Dataloader() {
 }
 
 Dataloader::~Dataloader() {
-    //printf("[DEBUG]: Start Dataloader\n");
 
     delete []cities;
     for (int i = 0; i < n_cities; i++) {
         delete [] distances[i];
     }
     delete [] distances;
-    //printf("[DEBUG]: END Dataloader\n");
 }
 
 double Dataloader::distance(int a_city, int b_city) {

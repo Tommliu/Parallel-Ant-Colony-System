@@ -14,8 +14,9 @@ public:
     Solution(double len, int ant, Path& p);
     Solution(const Solution &solution);
     Solution& operator= (const Solution& solution);
+    bool operator< (Solution& solution);
     virtual ~Solution();
-    void rest();
+    void reset();
     double length;
     Path path;
     int iant;

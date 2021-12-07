@@ -47,7 +47,6 @@ Path &Path::operator= (const Path &path) {
 
 double Path::get_length(Dataloader *dataloader) {
     double sum = 0.0;
-
     for (int i = 1; i < n_cities; ++i) {
         sum += dataloader->distances[route[i-1]][route[i]];
     }

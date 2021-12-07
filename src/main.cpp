@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h>
+#include <omp.h>
 #include "sequential/dataloader.h"
 #include "sequential/model.h"
 #include "sequential/timer.h"
@@ -74,6 +75,7 @@ int main(int argc, char *argv[]) {
             model = new Model(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
             break;
         case 1:
+            omp_set_num_threads(n_cores);
             model = new PACO(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
             break;
         default:

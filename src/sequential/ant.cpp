@@ -61,6 +61,7 @@ void Ant::update_probe(int start, int n_cities, Dataloader *dataloader,
 
 void Ant::update_pheromone(double **phero, double Q, Dataloader *dataloader) {
     double length = path.get_length(dataloader);
+
     int max_itr = path.n_cities;
     for (int i = 1; i < max_itr; ++i) {
         int start = path.route[i-1];
