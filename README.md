@@ -1,6 +1,23 @@
 15618 Final Project (Parallel Ant Colony System)
 
-## Output file format (./output/\<dataset\>)
+## Code Structure
+```
+Parallel-Ant-Colony-System/
+├── build
+├── Makefile
+├── README.md
+├── scripts
+│   ├── profiler.py
+│   ├── requirement.txt
+│   ├── run.sh
+│   └── visualizer.py
+├── src 
+└── test
+    └── VLSI
+    └── <dataset>
+```
+
+## Output file format (./output/\<dataset\>/)
 NAME : ...
 
 DIMENSION : ...

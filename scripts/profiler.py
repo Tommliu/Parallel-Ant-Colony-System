@@ -19,7 +19,7 @@ def parse_args():
 
 
 def save_image(dataset, filename, profile_type='sp'):
-    path = '../image/' + dataset + '/'
+    path = 'image/' + dataset + '/'
     if not os.path.exists(path):
         os.makedirs(path)
     plt.savefig(path + filename + '_' + profile_type + '.png', dpi=200)

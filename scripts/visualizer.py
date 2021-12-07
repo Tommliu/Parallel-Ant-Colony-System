@@ -26,7 +26,7 @@ def extract(lines, dimension):
 
 
 def save_image(dataset, filename):
-    path = '../image/' + dataset + '/'
+    path = 'image/' + dataset + '/'
     if not os.path.exists(path):
         os.makedirs(path)
     plt.savefig(path + filename + '.png', dpi=200)
