@@ -122,8 +122,8 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
     std::string test_name = test_path.substr(pos1+6, test_name_length);
 
     std::string test_dir_name = "./output/" + test_name + "/";
-    std::string output_path = test_dir_name + "output_" + std::to_string(n_cores);
-    std::string profile_path = test_dir_name + "profile";
+    std::string output_path = test_dir_name + test_name + "_" + std::to_string(n_cores);
+    std::string profile_path = test_dir_name + test_name + "_profile";
     result = access(test_dir_name.c_str(), F_OK);
     if (result) {
         int res = mkdir(test_dir_name.c_str(), 0755);

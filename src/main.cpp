@@ -68,6 +68,6 @@ int main(int argc, char *argv[]) {
     aco.solve(max_iteration);
     timer.end();
     aco.write_output(input_filename, n_cores, timer.get_duration_time());
-    printf("[FINISH]: %s with %lf s\n", input_filename, timer.get_duration_time());
+    printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
     return 0;
 }
