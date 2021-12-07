@@ -22,11 +22,16 @@ int Random::get_next_city(Ant *ant, int start, int n_cities, Dataloader *dataloa
 
     ant->update_probe(start, n_cities, dataloader, phero, alpha, beta);
     double p = distribution(gen);
+    double cumulate_p = 0.0;
     int i;
     for (i = 0; i < n_cities; ++i) {
-        if (ant->probe[i] > 0 && ant->probe[i] <= p) {
+        cumulate_p += ant->probe[i];
+        if (cumulate_p >= p) {
             break;
         }
+    }
+    if (i >= n_cities) {
+        perror("[ERROR]: cannot get next city!\n");
     }
 
     return i;

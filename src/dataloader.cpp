@@ -46,12 +46,3 @@ void Dataloader::load_data(const char *path) {
     }
     fclose(tsp);
 }
-
-void Dataloader::print_distances(int a, int b) {
-    for (int i = 0; i <= a; i++) {
-        for (int j = 0; j <= b; j++) {
-            printf("%f\t", distances[i][j]);
-        }
-        printf("\n");
-    }
-}

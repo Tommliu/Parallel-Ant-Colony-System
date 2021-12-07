@@ -17,9 +17,10 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
     dataloader = p_dataloader;
 
     random = new Random();
-    ants = std::vector<Ant>(n_ants, Ant(n_cities));
+    ants = new Ant[n_ants];
     pheromone = new double* [n_cities];
     best_route = new Path(n_cities);
+    best_ant = -1;
 
     for (int i = 0; i < n_cities; i++) {
         pheromone[i] = new double [n_cities];
@@ -30,13 +31,15 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
             pheromone[i][j] = 1.0;
         }
     }
+    for (int i = 0; i < n_ants; ++i) {
+        ants[i].initialize(n_cities);
+    }
 
-    best_length = static_cast<double>(INT_MAX);
+    local_best_length = static_cast<double>(INT_MAX);
+    global_best_length = local_best_length;
 }
 
 Model::~Model() {
-    //printf("[DEBUG]: Start Model\n");
-
     for (int i = 0; i < n_cities; i++) {
         delete [] pheromone[i];
     }
@@ -44,7 +47,10 @@ Model::~Model() {
 
     delete best_route;
     delete random;
-    //printf("[DEBUG]: End model\n");
+    for (int i = 0; i < n_ants; ++i) {
+        ants[i].release();
+    }
+    delete [] ants;
 }
 
 void Model::random_place_ants() {
@@ -52,25 +58,29 @@ void Model::random_place_ants() {
         int city = random->get_initial_city(n_cities);
         ants[i].reset();
         ants[i].visit_city(0, city);
-        printf("Ant %d, start citiy %d\n", i, city);
+        ants[i].visit_city(n_cities, city);
     }
 }
 
 void Model::construct_routes() {
-    //printf("construct_routes, (%d, %d)\n", n_ants, n_cities);
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {
             int next_city = random->get_next_city(&(ants[i]), (ants[i].path->route)[j-1],
                                                   n_cities, dataloader, pheromone, alpha, beta);
-            //printf("next %d\n", next_city);
             ants[i].visit_city(j, next_city);
         }
         double length = ants[i].get_length(dataloader);
-        if (length < best_length) {
-            best_length = length;
+        if (length < local_best_length) {
+            local_best_length = length;
             best_route->copy(ants[i].path);
+            best_ant = i;
         }
     }
+    if (local_best_length < global_best_length) {
+        global_best_length = local_best_length;
+        best_route->copy(ants[best_ant].path);
+    }
+    local_best_length = static_cast<double>(INT_MAX);
 }
 
 void Model::pheromone_decay() {
@@ -81,16 +91,13 @@ void Model::pheromone_decay() {
     }
 }
 
+// Only update the best ant's path
 void Model::update_pheromone() {
     pheromone_decay();
-    for (int i = 0; i < n_ants; ++i) {
-        ants[i].update_pheromone(pheromone, q, dataloader);
-    }
+    ants[best_ant].update_pheromone(pheromone, q, dataloader);
 }
 
 void Model::solve(int max_iter) {
-    printf("Call solve\n");
-
     for (int i = 0; i < max_iter; ++i) {
         random_place_ants();
         // update best route
@@ -113,15 +120,14 @@ void Model::write_output(const char* UNUSED input_path) {
     }
     fprintf(fp, "NAME: xqf131\n");
     fprintf(fp, "DATASET: VLSI\n");
-    fprintf(fp, "TOUR LENGTH: %f\n", best_length);
+    fprintf(fp, "TOUR LENGTH: %f\n", global_best_length);
     fprintf(fp, "COMPUTATION TIME: 10\n");
     fprintf(fp, "DIMENSION: %d\n", n_cities);
-    for (int i = 0; i < n_cities; ++i) {
+    int max_itr = n_cities + 1;
+    for (int i = 0; i < max_itr; ++i) {
         int city = best_route->route[i];
-        //printf("%d ", city);
         city_t tmp = (dataloader->cities)[city];
         fprintf(fp, "%d %d\n", tmp.x, tmp.y);
     }
-    //printf("\n");
-
+    fclose(fp);
 }

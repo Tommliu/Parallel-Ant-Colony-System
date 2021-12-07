@@ -9,13 +9,13 @@
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
-    int UNUSED numIterations = 5;
+    int UNUSED numIterations = 1;
     char *input_filename = NULL;
     double UNUSED alpha = 0.1;
     int opt = 0;
 
-    int number_of_ants = 1, max_iteration = 1;
-    double initial_alpha = 1.0, initial_beta = 1.0, initial_q = 1.0, initial_rho = 0.01;
+    int number_of_ants = 200, max_iteration = 200;
+    double initial_alpha = 3.0, initial_beta = 4.0, initial_q = 100.0, initial_rho = 0.3;
 
     // Read command line arguments
     do {
@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
 
     // TODO: figure out initial parameters
     Model aco(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, max_iteration, &dataloader);
-    printf("Building model\n");
+    //printf("Building model\n");
     aco.solve(max_iteration);
     aco.write_output(input_filename);
-    printf("End write\n");
+    //printf("End write\n");
     return 0;
 }

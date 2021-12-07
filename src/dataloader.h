@@ -20,7 +20,6 @@ public:
     virtual ~Dataloader();
     double distance(int a_city, int b_city);
     void load_data(const char *path);
-    void print_distances(int a, int b);
 
     int n_cities;
     double **distances;     // N^2

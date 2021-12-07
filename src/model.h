@@ -30,7 +30,8 @@ public:
 
     void solve(int max_itr);
 
-    double best_length;
+    double global_best_length, local_best_length;
+    int best_ant;
     int n_ants, n_cities;
     /**
      * alpha is Evaporation parameter
@@ -44,7 +45,6 @@ public:
     Dataloader *dataloader;
     Random *random;
     Path *best_route;
-    std::vector<Ant> ants;
-
+    Ant *ants;
 };
 #endif //PARALLEL_ANT_COLONY_SYSTEM_MODEL_H

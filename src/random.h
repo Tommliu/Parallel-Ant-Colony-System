@@ -6,6 +6,7 @@
 #define PARALLEL_ANT_COLONY_SYSTEM_RANDOM_H
 #pragma once
 #include <random>
+
 #include "ant.h"
 
 class Random {

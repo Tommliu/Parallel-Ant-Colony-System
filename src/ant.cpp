@@ -3,7 +3,9 @@
 //
 
 #include "ant.h"
-Ant::Ant(int number_of_cities) {
+Ant::Ant() {}
+
+void Ant::initialize(int number_of_cities) {
     path = new Path(number_of_cities);
     tabu_list = new Tabu(number_of_cities);
     probe = new double[number_of_cities];
@@ -12,15 +14,13 @@ Ant::Ant(int number_of_cities) {
     }
 }
 
-Ant::~Ant() {
-    //printf("[DEBUG]: Start Ant\n");
+void Ant::release() {
     delete path;
-    //printf("1\n");
     delete tabu_list;
-    //printf("2\n");
     delete [] probe;
-    //printf("[DEBUG]: End Ant\n");
 }
+
+Ant::~Ant() {}
 
 void Ant::visit_city(int index, int city) {
     path->route[index] = city;
@@ -31,42 +31,31 @@ double Ant::get_length(Dataloader *dataloader) {
     return path->get_length(dataloader);
 }
 
-void Ant::print_tabu() {
-    for (int i = 0; i < 131; ++i) {
-        printf("%d ", tabu_list->list[i]);
-    }
-    printf("\n");
-}
 
-//TODO:segment fault
 void Ant::update_probe(int start, int n_cities, Dataloader *dataloader,
                        double **phero, double alpha, double beta) {
     double sum = 0.0;
     for (int i = 0; i < n_cities; ++i) {
         if (tabu_list->is_visited(i)) {
             probe[i] = 0;
-            printf("probe %d = 0\n", i);
        } else {
-            printf("calc(%d, %d) ", start, i);
             double dis = (dataloader->distances)[start][i];
-            printf("dis= %f ", dis);
+            //printf("(%d, %d) = %f\n", start, i, dis);
+
             double ph = phero[start][i];
-            printf("ph= %f ", ph);
 
             double dis_inv = 1.0 / dis;
             double ETA = pow(dis_inv, beta);
-            printf("ETA= %f ", ETA);
 
             double TAU = pow(ph, alpha);
-            printf("TAU= %f ", TAU);
             double prob_si = ETA * TAU;
             probe[i] = prob_si;
-            printf("prob[%d]= %f", i, prob_si);
             sum += prob_si;
-            printf("\n");
        }
     }
-    printf("sum = %f\n", sum);
+    if (sum == 0.0) {
+        perror("[ERROR]: Failed to update probe!\n");
+    }
     for (int i = 0; i < n_cities; ++i) {
         probe[i] /= sum;
     }
@@ -74,10 +63,10 @@ void Ant::update_probe(int start, int n_cities, Dataloader *dataloader,
 
 void Ant::update_pheromone(double **phero, double Q, Dataloader *dataloader) {
     double length = path->get_length(dataloader);
-    int max_itr = path->n_cities - 1;
-    for (int i = 0; i < max_itr; ++i) {
-        int start = path->route[i];
-        int end = path->route[i+1];
+    int max_itr = path->n_cities;
+    for (int i = 1; i < max_itr; ++i) {
+        int start = path->route[i-1];
+        int end = path->route[i];
         phero[start][end] +=  Q / length;
         phero[end][start] = phero[start][end];
     }

@@ -14,7 +14,7 @@ public:
     void reset();
     double get_length(Dataloader *dataloader);
 
-    int *route;
-    int n_cities;
+    int *route;         // Has N+1 node since there is N segments
+    int n_cities;       // number of cities + 1
 };
 #endif //PARALLEL_ANT_COLONY_SYSTEM_PATH_H

@@ -6,11 +6,14 @@
 #define PARALLEL_ANT_COLONY_SYSTEM_ANT_H
 #pragma once
 #include <cmath>
+
 #include "path.h"
 #include "tabu.h"
 class Ant {
 public:
-    Ant(int number_of_cities);
+    Ant();
+    void initialize(int number_of_cities);
+    void release();
     void visit_city(int index, int city);
     void reset();
     double get_length(Dataloader *dataloader);
@@ -19,9 +22,6 @@ public:
 
     void update_pheromone(double **phero, double Q, Dataloader *dataloader);
     virtual ~Ant();
-
-    void print_tabu();
-
 
     Path *path;
     Tabu *tabu_list;
