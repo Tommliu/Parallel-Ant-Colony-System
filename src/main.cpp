@@ -15,7 +15,9 @@ int main(int argc, char *argv[]) {
 
     int number_of_ants = 200, max_iteration = 200;
     double alpha = 3.0, beta = 4.0, q = 100.0, rho = 0.3;
-    int UNUSED n_cores = 1;
+    int n_cores = 1;
+    int UNUSED mode = 0;
+    Model *model = nullptr;
 
     // Read command line arguments
     do {
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
                 rho = atof(optarg);
                 break;
             case 'n':
-                number_of_ants = atof(optarg);
+                number_of_ants = atoi(optarg);
                 break;
             case 'i':
                 max_iteration = atoi(optarg);
@@ -45,9 +47,11 @@ int main(int argc, char *argv[]) {
             case 'c':
                 n_cores = atoi(optarg);
                 break;
+            case 'm':
+                mode = atoi(optarg);
+                break;
             case -1:
                 break;
-
             default:
                 break;
         }
@@ -57,17 +61,26 @@ int main(int argc, char *argv[]) {
         printf("Usage: %s -f <filename> [-a <Alpha>] [-b <Beta>] [-q <Q>] [-r <Rho>] [-n <N_Ants>] [-i <N_Iterations>] [-c <N_Cores>]\n", argv[0]);
         return -1;
     }
+
     printf("[RUNNING]: %s with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
            input_filename, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
     Timer timer;
     Dataloader dataloader;
     dataloader.load_data(input_filename);
 
+    switch (mode) {
+        case 0:
+            model = new Model(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
+            break;
+        default:
+            printf("[ERROR]: No specific mode!\n");
+            exit(127);
+    }
+
     timer.start();
-    Model aco(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
-    aco.solve(max_iteration);
+    model->solve(max_iteration);
     timer.end();
-    aco.write_output(input_filename, n_cores, timer.get_duration_time());
+    model->write_output(input_filename, n_cores, timer.get_duration_time());
     printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
     return 0;
 }
