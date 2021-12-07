@@ -3,13 +3,17 @@
 ## Output file format
 NAME : ...
 
-DATASET : VLSI
-
-TOUR LENGTH: ...
-
-COMPUTATION TIME: ...
-
 DIMENSION : ...
+
+## Output profile format
+COMPUTATION TIME :
+
+[baseline]
+
+[core]
+
+...
+
 
 ## Visualizer
 
