@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     } while (opt != -1);
 
     if (input_filename == NULL) {
-        printf("Usage: %s -f <filename> [-a <Alpha>] [-b <Beta>] [-q <Q>] [-r <Rho>] [-n <N_Ants>] [-i <N_Iterations>] [-c <N_Cores>]\n", argv[0]);
+        printf("Usage: %s -f <filename> [-a <Alpha>] [-b <Beta>] [-q <Q>] [-r <Rho>] [-n <N_Ants>] [-i <N_Iterations>] [-c <N_Cores>] [-m <ACO_Model>]\n", argv[0]);
         return -1;
     }
 

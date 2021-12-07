@@ -15,6 +15,7 @@
 #include "ant.h"
 #include "path.h"
 #include "random.h"
+#include "solution.h"
 
 class Model {
 public:
@@ -24,15 +25,15 @@ public:
     virtual ~Model();
 
     void random_place_ants();
-    void construct_routes();
+    virtual void construct_routes();
     void update_pheromone();
     void pheromone_decay();
     void write_output(const char* input_path, int n_core, double duration_time);
 
     void solve(int max_itr);
 
-    double global_best_length, local_best_length;
-    int best_ant;
+    Solution global_best, local_best;
+
     int n_ants, n_cities;
     /**
      * alpha is Evaporation parameter
@@ -44,8 +45,7 @@ public:
     double alpha, beta, q, rho, tau, decay_rate;
     double **pheromone;
     Dataloader *dataloader;
-    Random *random;
-    Path *best_route;
+    Random random;
     Ant *ants;
 };
 #endif //PARALLEL_ANT_COLONY_SYSTEM_MODEL_H

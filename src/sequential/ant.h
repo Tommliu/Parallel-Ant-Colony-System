@@ -23,8 +23,8 @@ public:
     void update_pheromone(double **phero, double Q, Dataloader *dataloader);
     virtual ~Ant();
 
-    Path *path;
-    Tabu *tabu_list;
+    Path path;
+    Tabu tabu_list;
     double *probe;
 };
 

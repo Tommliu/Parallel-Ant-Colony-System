@@ -8,9 +8,12 @@
 #include "dataloader.h"
 class Path {
 public:
+    Path();
     Path(int number_of_cities);
+    Path(const Path &path);
+    void init(int number_of_cities);
+    Path& operator= (const Path&);
     virtual ~Path();
-    void copy(Path *other);
     void reset();
     double get_length(Dataloader *dataloader);
 

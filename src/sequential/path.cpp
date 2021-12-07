@@ -3,20 +3,46 @@
 //
 
 #include "path.h"
+Path::Path() {
+    route = nullptr;
+    n_cities = -1;
+}
+
 Path::Path(int number_of_cities) {
     n_cities = number_of_cities + 1;
     route = new int[n_cities];
     reset();
 }
 
-Path::~Path() {
-    delete [] route;
+void Path::init(int number_of_cities) {
+    n_cities = number_of_cities + 1;
+    route = new int[n_cities];
+    reset();
 }
 
-void Path::copy(Path *other) {
-    for (int i = 0; i < n_cities; ++i) {
-        route[i] = other->route[i];
+Path::~Path() {
+    if (route) {
+        delete [] route;
     }
+}
+
+Path::Path(const Path &path) {
+    n_cities = path.n_cities;
+    route = new int[n_cities];
+    for (int i = 0; i < n_cities; ++i) {
+        route[i] = path.route[i];
+    }
+}
+
+Path &Path::operator= (const Path &path) {
+    n_cities = path.n_cities;
+    if (!route) {
+        route = new int[n_cities];
+    }
+    for (int i = 0; i < n_cities; ++i) {
+        route[i] = path.route[i];
+    }
+    return *this;
 }
 
 double Path::get_length(Dataloader *dataloader) {

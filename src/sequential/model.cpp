@@ -18,27 +18,19 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
 
     dataloader = p_dataloader;
 
-    random = new Random();
     ants = new Ant[n_ants];
     pheromone = new double* [n_cities];
-    best_route = new Path(n_cities);
-    best_ant = -1;
 
     for (int i = 0; i < n_cities; i++) {
         pheromone[i] = new double [n_cities];
 
-        best_route->route[i] = -1;
         for (int j = 0; j < n_cities; j++) {
-            // TODO: initialization
             pheromone[i][j] = 1.0;
         }
     }
     for (int i = 0; i < n_ants; ++i) {
         ants[i].initialize(n_cities);
     }
-
-    local_best_length = static_cast<double>(INT_MAX);
-    global_best_length = local_best_length;
 }
 
 Model::~Model() {
@@ -47,8 +39,6 @@ Model::~Model() {
     }
     delete [] pheromone;
 
-    delete best_route;
-    delete random;
     for (int i = 0; i < n_ants; ++i) {
         ants[i].release();
     }
@@ -57,7 +47,7 @@ Model::~Model() {
 
 void Model::random_place_ants() {
     for (int i = 0; i < n_ants; ++i) {
-        int city = random->get_initial_city(n_cities);
+        int city = random.get_initial_city(n_cities);
         ants[i].reset();
         ants[i].visit_city(0, city);
         ants[i].visit_city(n_cities, city);
@@ -67,22 +57,19 @@ void Model::random_place_ants() {
 void Model::construct_routes() {
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {
-            int next_city = random->get_next_city(&(ants[i]), (ants[i].path->route)[j-1],
+            int next_city = random.get_next_city(&(ants[i]), (ants[i].path.route)[j-1],
                                                   n_cities, dataloader, pheromone, alpha, beta);
             ants[i].visit_city(j, next_city);
         }
         double length = ants[i].get_length(dataloader);
-        if (length < local_best_length) {
-            local_best_length = length;
-            best_route->copy(ants[i].path);
-            best_ant = i;
+        if (length < local_best.length) {
+            local_best = Solution(length, i, ants[i].path);
         }
     }
-    if (local_best_length < global_best_length) {
-        global_best_length = local_best_length;
-        best_route->copy(ants[best_ant].path);
+    if (local_best.length < global_best.length) {
+        global_best = local_best;
     }
-    local_best_length = static_cast<double>(INT_MAX);
+    local_best.rest();// = static_cast<double>(INT_MAX);
 }
 
 void Model::pheromone_decay() {
@@ -96,7 +83,7 @@ void Model::pheromone_decay() {
 // Only update the best ant's path
 void Model::update_pheromone() {
     pheromone_decay();
-    ants[best_ant].update_pheromone(pheromone, q, dataloader);
+    ants[local_best.iant].update_pheromone(pheromone, q, dataloader);
 }
 
 void Model::solve(int max_iter) {
@@ -139,7 +126,7 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
         printf("[ERROR]:failed to open output file\n");
     }
     fprintf(fp_profile, "COMPUTATION TIME (%d) : %lf\n", n_cores, duration_time);
-    fprintf(fp_profile, "TOUR_LENGTH (%d) : %lf\n", n_cores, global_best_length);
+    fprintf(fp_profile, "TOUR_LENGTH (%d) : %lf\n", n_cores, global_best.length);
 
     fclose(fp_profile);
 
@@ -147,12 +134,14 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
     if (fp == nullptr) {
         printf("[ERROR]:failed to open output file\n");
     }
+
     fprintf(fp, "NAME: %s\n", test_name.c_str());
-    fprintf(fp, "DISTANCE: %lf\n", global_best_length);
+    fprintf(fp, "DISTANCE: %lf\n", global_best.length);
     fprintf(fp, "DIMENSION: %d\n", n_cities);
+
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {
-        int city = best_route->route[i];
+        int city = global_best.path.route[i];
         city_t tmp = (dataloader->cities)[city];
         fprintf(fp, "%d %d\n", tmp.x, tmp.y);
     }

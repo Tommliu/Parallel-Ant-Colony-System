@@ -9,8 +9,13 @@
 
 class Tabu {
 public:
+    Tabu();
     Tabu(int number_of_cities);
+    Tabu(const Tabu& tabu);
+    Tabu& operator= (const Tabu&);
     virtual ~Tabu();
+    void init(int number_of_cities);
+
     char is_visited(int city);
     void reset();
 
