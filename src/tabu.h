@@ -5,15 +5,16 @@
 #ifndef PARALLEL_ANT_COLONY_SYSTEM_TABU_H
 #define PARALLEL_ANT_COLONY_SYSTEM_TABU_H
 #pragma once
+#include <cstdio>
 
 class Tabu {
 public:
     Tabu(int number_of_cities);
     virtual ~Tabu();
-    bool is_visited(int city);
+    char is_visited(int city);
     void reset();
 
-    bool *list;
+    char *list;
     int n_cities;
 };
 #endif //PARALLEL_ANT_COLONY_SYSTEM_TABU_H

@@ -10,7 +10,7 @@ class Path {
 public:
     Path(int number_of_cities);
     virtual ~Path();
-    Path& operator=(const Path& route);
+    void copy(Path *other);
     void reset();
     double get_length(Dataloader *dataloader);
 

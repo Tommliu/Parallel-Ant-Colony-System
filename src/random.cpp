@@ -19,6 +19,7 @@ int Random::get_next_city(Ant *ant, int start, int n_cities, Dataloader *dataloa
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
     ant->update_probe(start, n_cities, dataloader, phero, alpha, beta);
     double p = distribution(gen);
     int i;

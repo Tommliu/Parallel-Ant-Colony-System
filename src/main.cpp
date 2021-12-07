@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
     double UNUSED alpha = 0.1;
     int opt = 0;
 
-    int number_of_ants = 100, max_iteration = 5;
-    double initial_alpha = 0.1, initial_beta = 0.1, initial_q = 1.0, initial_rho = 0.01;
+    int number_of_ants = 1, max_iteration = 1;
+    double initial_alpha = 1.0, initial_beta = 1.0, initial_q = 1.0, initial_rho = 0.01;
 
     // Read command line arguments
     do {
@@ -50,6 +50,9 @@ int main(int argc, char *argv[]) {
 
     // TODO: figure out initial parameters
     Model aco(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, max_iteration, &dataloader);
-    aco.solve();
+    printf("Building model\n");
+    aco.solve(max_iteration);
     aco.write_output(input_filename);
+    printf("End write\n");
+    return 0;
 }
