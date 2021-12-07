@@ -3,13 +3,32 @@
 //
 
 #include "paco.h"
-PACO::PACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q, double initial_rho, int max_iteration, Dataloader *p_dataloader): Model(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, max_iteration, p_dataloader) {}
+PACO::PACO(int number_of_ants, double initial_alpha, double initial_beta,
+           double initial_q, double initial_rho, Dataloader *p_dataloader) {
+    init(initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader);
+    n_ants = number_of_ants;
+    ants = new pAnt[n_ants];
 
-PACO::~PACO(){}
+    for (int i = 0; i < n_ants; ++i) {
+        ants[i].initialize(n_cities);
+    }
+}
+PACO::~PACO() {}
 
 Solution& myMin(Solution& x, Solution& y) {
     return x < y ? x : y;
 }
+
+void PACO::random_place_ants() {
+#pragma omp parallel for schedule(static)
+    for (int i = 0; i < n_ants; ++i) {
+        int city = random.get_initial_city(n_cities);
+        ants[i].reset();
+        ants[i].visit_city(0, city);
+        ants[i].visit_city(n_cities, city);
+    }
+}
+
 
 void PACO::construct_routes() {
 

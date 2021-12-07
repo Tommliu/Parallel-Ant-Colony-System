@@ -43,6 +43,7 @@ OBJS = $(BUILD)/obj/dataloader.o \
 	   $(BUILD)/obj/model.o \
 	   $(BUILD)/obj/paco.o \
 	   $(BUILD)/obj/ant.o \
+	   $(BUILD)/obj/pant.o \
 	   $(BUILD)/obj/path.o \
 	   $(BUILD)/obj/random.o \
 	   $(BUILD)/obj/tabu.o \

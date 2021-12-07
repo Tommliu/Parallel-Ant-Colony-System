@@ -6,9 +6,9 @@
 #define UNUSED __attribute__((unused))
 Model::Model() {}
 
-Model::Model(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
-             double initial_rho, int initial_city, Dataloader *p_dataloader) {
-    n_ants = number_of_ants;
+void Model::init(double initial_alpha, double initial_beta, double initial_q, double initial_rho,
+                 Dataloader *p_dataloader) {
+
     n_cities = p_dataloader->n_cities;
     alpha = initial_alpha;
     beta = initial_beta;
@@ -17,8 +17,6 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
     decay_rate = 1.0 - rho;
 
     dataloader = p_dataloader;
-
-    ants = new Ant[n_ants];
     pheromone = new double* [n_cities];
 
     for (int i = 0; i < n_cities; i++) {
@@ -28,6 +26,15 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
             pheromone[i][j] = 1.0;
         }
     }
+}
+
+Model::Model(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
+             double initial_rho, Dataloader *p_dataloader) {
+    init(initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader);
+
+    n_ants = number_of_ants;
+    ants = new Ant[n_ants];
+
     for (int i = 0; i < n_ants; ++i) {
         ants[i].initialize(n_cities);
     }
@@ -42,6 +49,7 @@ Model::~Model() {
     for (int i = 0; i < n_ants; ++i) {
         ants[i].release();
     }
+
     delete [] ants;
 }
 
@@ -142,6 +150,7 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {
         int city = global_best.path.route[i];
+        //printf("[DEBUG]: city %d\n", city);
         city_t tmp = (dataloader->cities)[city];
         fprintf(fp, "%d %d\n", tmp.x, tmp.y);
     }

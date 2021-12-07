@@ -21,10 +21,11 @@ class Model {
 public:
     Model();
     Model(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
-           double initial_rho, int max_iteration, Dataloader *p_dataloader);
+           double initial_rho, Dataloader *p_dataloader);
     virtual ~Model();
-
-    void random_place_ants();
+    void init(double initial_alpha, double initial_beta, double initial_q,
+              double initial_rho, Dataloader *p_dataloader);
+    virtual void random_place_ants();
     virtual void construct_routes();
     void update_pheromone();
     void pheromone_decay();

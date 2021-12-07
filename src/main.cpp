@@ -72,11 +72,11 @@ int main(int argc, char *argv[]) {
 
     switch (mode) {
         case 0:
-            model = new Model(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
+            model = new Model(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
         case 1:
             omp_set_num_threads(n_cores);
-            model = new PACO(number_of_ants, alpha, beta, q, rho, max_iteration, &dataloader);
+            model = new PACO(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
         default:
             printf("[ERROR]: No specific mode!\n");
