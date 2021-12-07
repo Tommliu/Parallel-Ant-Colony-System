@@ -18,9 +18,11 @@ Parallel-Ant-Colony-System/
 ```
 
 ## Output file format (./output/\<dataset\>/)
-NAME : ...
+NAME : \<name\>
 
-DIMENSION : ...
+DISTANCE: \<distance\>
+
+DIMENSION : \<dimension\>
 
 \<output positions\>
 

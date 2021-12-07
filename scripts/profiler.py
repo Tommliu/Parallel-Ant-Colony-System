@@ -5,8 +5,8 @@ import os
 from matplotlib import pyplot as plt
 
 # This script is used to plot the speedup ...
-n_cores = [1, 4, 16, 64 ,128]
-n_cores_chars = ['1', '4', '16', '64', '128']
+n_cores = []
+n_cores_chars = []
 batch_size = 2
 speedup_offset = 0
 tour_length_offset = 1
@@ -29,8 +29,11 @@ def plot_profile(lines, dataset, filename):
     baseline = float(lines[speedup_offset].split()[-1])
     speedups = []
     tour_lengths = []
-    N = len(n_cores)
+    N = len(lines) // 2
     for i in range(N):
+        cores = int(lines[i * batch_size + speedup_offset].split()[2][1:-1])
+        n_cores.append(cores)
+        n_cores_chars.append(str(cores))
         speedups.append(baseline / float(lines[i * batch_size + speedup_offset].split()[-1]))
         tour_lengths.append(float(lines[i * batch_size + tour_length_offset].split()[-1]))
     
@@ -40,7 +43,7 @@ def plot_profile(lines, dataset, filename):
     plt.xlabel('Cores')
     plt.ylabel('Speedup')
     plt.grid(True)
-    plt.title(dataset + ' speedup')
+    plt.title(dataset + ' Speedup')
     for x_value, y_value in zip(n_cores, speedups):
         label = "{:.2f}".format(y_value)
         plt.annotate(label,(x_value, y_value), xytext=(0, 5), \
@@ -69,7 +72,7 @@ def plot_profile(lines, dataset, filename):
 def main(args):
     filepath = args.file
     filename = filepath.strip().split('/')[-1]
-    dataset = filename.split('_')[0]
+    dataset = filepath.strip().split('/')[-2]
     profile = open(filepath, 'r')
     lines = profile.readlines()
     
