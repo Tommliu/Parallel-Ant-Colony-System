@@ -11,6 +11,7 @@ public:
     Communicator();
     ~Communicator();
     Communicator(size_t length);
+    void init(size_t length);
 
     void send_msg(int destination, int tag);
     void receive_msg(int source, int tag);

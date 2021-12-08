@@ -13,6 +13,12 @@ Communicator::Communicator(size_t length) {
     send_buffer = new char[msg_len];
 }
 
+void Communicator::init(size_t length) {
+    length = msg_len;
+    recv_buffer = new char[msg_len];
+    send_buffer = new char[msg_len];
+}
+
 Communicator::~Communicator() {
     delete [] recv_buffer;
     delete [] send_buffer;
