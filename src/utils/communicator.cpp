@@ -7,7 +7,7 @@ Communicator::Communicator() {
     msg = nullptr;
 }
 
-Communicator::Communicator(int length) {
+Communicator::Communicator(size_t length) {
     length = msg_len;
     recv_buffer = new char[msg_len];
     send_buffer = new char[msg_len];
