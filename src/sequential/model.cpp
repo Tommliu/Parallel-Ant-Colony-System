@@ -22,9 +22,11 @@ void Model::init(double initial_alpha, double initial_beta, double initial_q, do
     for (int i = 0; i < n_cities; i++) {
         pheromone[i] = new double [n_cities];
 
-        for (int j = 0; j < n_cities; j++) {
+        for (int j = 0; j < i; j++) {
             pheromone[i][j] = 1.0;
+            pheromone[j][i] = 1.0;
         }
+        pheromone[i][i] = 0.0;
     }
 }
 
@@ -80,6 +82,7 @@ void Model::construct_routes() {
     local_best.reset();
 }
 
+// TODO: related to cache miss for multi-threads.
 void Model::pheromone_decay() {
     for (int i = 0; i < n_cities; ++i) {
         for (int j = 0; j < n_cities; ++j) {
@@ -150,7 +153,6 @@ void Model::write_output(const char* UNUSED input_path, int n_cores, double dura
     int max_itr = n_cities + 1;
     for (int i = 0; i < max_itr; ++i) {
         int city = global_best.path.route[i];
-        //printf("[DEBUG]: city %d\n", city);
         city_t tmp = (dataloader->cities)[city];
         fprintf(fp, "%d %d\n", tmp.x, tmp.y);
     }
