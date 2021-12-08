@@ -7,8 +7,9 @@ Communicator::Communicator() {
     msg = nullptr;
 }
 
-Communicator::Communicator(size_t length) {
+Communicator::Communicator(size_t length, int number_of_cities) {
     length = msg_len;
+    n_cities = number_of_cities + 1;
     recv_buffer = new char[msg_len];
     send_buffer = new char[msg_len];
 }
@@ -43,7 +44,19 @@ void Communicator::upload_solution(Solution &solution) {
 }
 
 void Communicator::download_solution(Solution &solution) {
+    solution.init();
     int *msg = (int *)recv_buffer;
+    int max_itr = solution.path.n_cities;
+    for (int i = 0; i < max_itr; ++i) {
+        solution.path.route[i] = msg[i];
+    }
+    double *plen = (double *)(recv_buffer + length - sizeof(double));
+    solution.length = *plen;
+}
+
+void Communicator::download_from_broadcast(Solution &solution) {
+    solution.init();
+    int *msg = (int *)send_buffer;
     int max_itr = solution.path.n_cities;
     for (int i = 0; i < max_itr; ++i) {
         solution.path.route[i] = msg[i];

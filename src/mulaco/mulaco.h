@@ -8,7 +8,8 @@
 #include "../utils/communicator.h"
 
 class MulACO: public Model{
-    MulACO();
+    MulACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
+           double initial_rho, Dataloader *p_dataloader);
     ~MulACO();
 
     Communicator communicator;

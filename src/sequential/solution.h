@@ -13,6 +13,7 @@ public:
     Solution();
     Solution(double len, Path& p);
     Solution(const Solution &solution);
+    void init(int n_cities);
     Solution& operator= (const Solution& solution);
     bool operator< (Solution& solution);
     virtual ~Solution();

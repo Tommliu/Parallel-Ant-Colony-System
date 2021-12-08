@@ -10,7 +10,7 @@ class Communicator {
 public:
     Communicator();
     ~Communicator();
-    Communicator(size_t length);
+    Communicator(size_t length, int number_of_cities);
     void init(size_t length);
 
     void send_msg(int destination, int tag);
@@ -24,6 +24,7 @@ public:
 
     char *recv_buffer, *send_buffer;
     size_t length;
+    int n_cities;
 };
 
 
