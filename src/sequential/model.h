@@ -27,7 +27,7 @@ public:
               double initial_rho, Dataloader *p_dataloader);
     virtual void random_place_ants();
     virtual void construct_routes();
-    void update_pheromone();
+    virtual void update_pheromone();
     void pheromone_decay();
     void write_output(const char* input_path, int n_core, double duration_time);
 

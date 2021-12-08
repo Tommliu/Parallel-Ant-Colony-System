@@ -9,11 +9,17 @@
 #include "sequential/model.h"
 #include "sequential/timer.h"
 #include "paco/paco.h"
+#include "mpiaco/mpiaco.h"
+#include "mpi.h"
+
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
     char *input_filename = NULL;
     int opt = 0;
+    // for MPI usage
+    int procID;
+    int nproc;
 
     int number_of_ants = 200, max_iteration = 200;
     double alpha = 3.0, beta = 4.0, q = 100.0, rho = 0.3;
@@ -78,6 +84,11 @@ int main(int argc, char *argv[]) {
             omp_set_num_threads(n_cores);
             model = new PACO(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
+        case 2:
+            MPI_Init(&argc, &argv);
+            MPI_Comm_rank(MPI_COMM_WORLD, &procID);
+            MPI_Comm_size(MPI_COMM_WORLD, &nproc);
+            model = new MPIACO(number_of_ants, procID, nproc, alpha, beta, q, rho, max_iteration, &dataloader);
         default:
             printf("[ERROR]: No specific mode!\n");
             exit(127);
@@ -88,6 +99,11 @@ int main(int argc, char *argv[]) {
     timer.end();
     model->write_output(input_filename, n_cores, timer.get_duration_time());
     delete model;
+    if (mode == 2) {
+        MPI_Finalize();
+        printf("[FINISH]: proc %d with %lf seconds\n", procID, timer.get_duration_time());
+    }
+
     printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
     return 0;
 }
