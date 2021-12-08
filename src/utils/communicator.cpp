@@ -26,6 +26,22 @@ char *Communicator::receive_msg(int source, int tag) {
     MPI_Recv(recv_buffer, length, MPI_BYTE, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
 
+void Communicator::upload_solution(Solution &solution) {
+    int *msg = (int *)send_buffer;
+    int max_itr = solution.path.n_cities;
+    for (int i = 0; i < max_itr; ++i) {
+        msg[i] = solution.path.route[i];
+    }
+}
+
+void Communicator::download_solution(Solution &solution) {
+    int *msg = (int *)recv_buffer;
+    int max_itr = solution.path.n_cities;
+    for (int i = 0; i < max_itr; ++i) {
+        solution.path.route[i] = msg[i];
+    }
+}
+
 void Communicator::broadcast_msg(int root) {
     MPI_Bcast(send_buffer, length, MPI_BYTE, root, MPI_COMM_WORLD);
 }
