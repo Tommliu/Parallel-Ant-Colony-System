@@ -19,8 +19,6 @@ public:
     double get_length(Dataloader *dataloader);
     void update_probe(int start, int n_cities, Dataloader *dataloader,
                       double **phero, double alpha, double beta);
-
-    virtual void update_pheromone(double **phero, double Q, Dataloader *dataloader);
     virtual ~Ant();
 
     Path path;

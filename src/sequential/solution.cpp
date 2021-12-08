@@ -5,14 +5,11 @@
 #include "solution.h"
 Solution::Solution() {
     length = static_cast<double>(INT_MAX);
-    iant = -1;
 }
 
-Solution::Solution(double len, int ant, Path &p) {
+Solution::Solution(double len, Path &p) {
     length = len;
     path = p;
-    iant = ant;
-
 }
 
 Solution::~Solution() {}
@@ -20,13 +17,11 @@ Solution::~Solution() {}
 Solution::Solution(const Solution &solution) {
     length = solution.length;
     path = solution.path;
-    iant = solution.iant;
 }
 
 Solution &Solution::operator=(const Solution &solution) {
     length = solution.length;
     path = solution.path;
-    iant = solution.iant;
     return *this;
 }
 

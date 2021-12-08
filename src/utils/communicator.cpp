@@ -32,6 +32,8 @@ void Communicator::upload_solution(Solution &solution) {
     for (int i = 0; i < max_itr; ++i) {
         msg[i] = solution.path.route[i];
     }
+    double *plen = (double *)(send_buffer + length - sizeof(double));
+    *plen = solution.length;
 }
 
 void Communicator::download_solution(Solution &solution) {
@@ -40,6 +42,8 @@ void Communicator::download_solution(Solution &solution) {
     for (int i = 0; i < max_itr; ++i) {
         solution.path.route[i] = msg[i];
     }
+    double *plen = (double *)(send_buffer + length - sizeof(double));
+    solution.length = *plen;
 }
 
 void Communicator::broadcast_msg(int root) {

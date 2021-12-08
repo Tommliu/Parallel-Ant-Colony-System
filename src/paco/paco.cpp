@@ -4,20 +4,8 @@
 
 #include "paco.h"
 PACO::PACO(int number_of_ants, double initial_alpha, double initial_beta,
-           double initial_q, double initial_rho, Dataloader *p_dataloader) {
-    init(initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader);
-    n_ants = number_of_ants;
-    ants = new pAnt[n_ants];
-
-    for (int i = 0; i < n_ants; ++i) {
-        ants[i].initialize(n_cities);
-    }
-}
+           double initial_q, double initial_rho, Dataloader *p_dataloader): Model(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader) {}
 PACO::~PACO() {}
-
-Solution& myMin(Solution& x, Solution& y) {
-    return x < y ? x : y;
-}
 
 void PACO::random_place_ants() {
 #pragma omp parallel for schedule(static)
@@ -30,10 +18,10 @@ void PACO::random_place_ants() {
 }
 
 
-void PACO::construct_routes() {
+void PACO::construct_routes(Solution &local_best) {
 
 #pragma omp declare reduction \
-        (minLength:Solution:omp_out=myMin(omp_out, omp_in)) \
+        (minLength:Solution:omp_out=better_solution(omp_out, omp_in)) \
         initializer(omp_priv = Solution())
 
 #pragma omp parallel for reduction(minLength: local_best)
@@ -45,14 +33,13 @@ void PACO::construct_routes() {
         }
         double length = ants[i].get_length(dataloader);
 
-        Solution curr_solution(length, i, ants[i].path);
+        Solution curr_solution(length, ants[i].path);
 
-        local_best = myMin(local_best, curr_solution);
+        local_best = better_solution(local_best, curr_solution);
 
     }
 
     if (local_best.length < global_best.length) {
         global_best = local_best;
     }
-    local_best.reset();
 }

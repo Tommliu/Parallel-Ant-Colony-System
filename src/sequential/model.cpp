@@ -64,7 +64,7 @@ void Model::random_place_ants() {
     }
 }
 
-void Model::construct_routes() {
+void Model::construct_routes(Solution &local_best) {
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {
             int next_city = random.get_next_city(&(ants[i]), (ants[i].path.route)[j-1],
@@ -72,9 +72,9 @@ void Model::construct_routes() {
             ants[i].visit_city(j, next_city);
         }
         double length = ants[i].get_length(dataloader);
-        if (length < local_best.length) {
-            local_best = Solution(length, i, ants[i].path);
-        }
+        Solution curr_solution(length, ants[i].path);
+
+        local_best = better_solution(local_best, curr_solution);
     }
     if (local_best.length < global_best.length) {
         global_best = local_best;
@@ -91,18 +91,30 @@ void Model::pheromone_decay() {
     }
 }
 
+Solution &Model::better_solution(Solution &x, Solution &y) {
+    return x < y ? x : y;
+}
+
 // Only update the best ant's path
-void Model::update_pheromone() {
+void Model::update_pheromone(Solution &solution) {
     pheromone_decay();
-    ants[local_best.iant].update_pheromone(pheromone, q, dataloader);
+
+    int max_itr = solution.path.n_cities;
+    for (int i = 1; i < max_itr; ++i) {
+        int start = solution.path.route[i-1];
+        int end = solution.path.route[i];
+        pheromone[start][end] +=  q / solution.length;
+        pheromone[end][start] = pheromone[start][end];
+    }
 }
 
 void Model::solve(int max_iter) {
+    Solution local_best;
     for (int i = 0; i < max_iter; ++i) {
         random_place_ants();
         // update best route
-        construct_routes();
-        update_pheromone();
+        construct_routes(local_best);
+        update_pheromone(local_best);
     }
 }
 

@@ -26,14 +26,15 @@ public:
     void init(double initial_alpha, double initial_beta, double initial_q,
               double initial_rho, Dataloader *p_dataloader);
     virtual void random_place_ants();
-    virtual void construct_routes();
-    virtual void update_pheromone();
+    virtual void construct_routes(Solution &local_best);
+    virtual void update_pheromone(Solution &solution);
+    Solution& better_solution(Solution& x, Solution& y);
     void pheromone_decay();
     void write_output(const char* input_path, int n_core, double duration_time);
 
     void solve(int max_itr);
 
-    Solution global_best, local_best;
+    Solution global_best;
 
     int n_ants, n_cities;
     /**
