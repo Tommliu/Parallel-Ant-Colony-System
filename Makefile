@@ -27,6 +27,14 @@ $(BUILD)/obj/%.o: src/paco/%.cpp
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
+$(BUILD)/obj/%.o: src/mpiaco/%.cpp
+	$(QUIET_ECHO) $@: Compiling object
+	@ mkdir -p $(dir $(BUILD)/dep/$<)
+	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
+        -o $(BUILD)/dep/$(<:%.cpp=%.d) -c $<
+	@ mkdir -p $(dir $@)
+	@ $(CXX) $(CXXFLAGS) -o $@ -c $<	
+
 $(BUILD)/obj/main.o: src/main.cpp
 	$(QUIET_ECHO) $@: Compiling object
 	@ mkdir -p $(dir $(BUILD)/dep/$<)
@@ -41,9 +49,10 @@ $(APP_NAME): $(BUILD)/bin/$(APP_NAME)
 
 OBJS = $(BUILD)/obj/dataloader.o \
 	   $(BUILD)/obj/model.o \
+	   $(BUILD)/obj/mpiaco.o \
+	   $(BUILD)/obj/pant.o \
 	   $(BUILD)/obj/paco.o \
 	   $(BUILD)/obj/ant.o \
-	   $(BUILD)/obj/pant.o \
 	   $(BUILD)/obj/path.o \
 	   $(BUILD)/obj/random.o \
 	   $(BUILD)/obj/tabu.o \
