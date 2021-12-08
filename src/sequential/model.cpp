@@ -65,7 +65,7 @@ void Model::random_place_ants() {
 }
 
 void Model::construct_routes(Solution &local_best) {
-    Solution curr_solution;
+    local_best.reset();
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {
             int next_city = random.get_next_city(&(ants[i]), (ants[i].path.route)[j-1],
@@ -73,7 +73,7 @@ void Model::construct_routes(Solution &local_best) {
             ants[i].visit_city(j, next_city);
         }
         double length = ants[i].get_length(dataloader);
-        curr_solution = Solution(length, ants[i].path);
+        Solution curr_solution(length, ants[i].path);
 
         local_best = better_solution(local_best, curr_solution);
     }
