@@ -4,14 +4,15 @@
 
 #include "communicator.h"
 Communicator::Communicator() {
-    msg = nullptr;
+    recv_buffer = nullptr;
+    send_buffer = nullptr;
 }
 
-Communicator::Communicator(size_t length, int number_of_cities) {
-    length = msg_len;
+Communicator::Communicator(size_t msg_length, int number_of_cities) {
+    length = msg_length;
     n_cities = number_of_cities + 1;
-    recv_buffer = new char[msg_len];
-    send_buffer = new char[msg_len];
+    recv_buffer = new char[length];
+    send_buffer = new char[length];
 }
 
 void Communicator::init(size_t length) {
@@ -34,9 +35,9 @@ char *Communicator::receive_msg(int source, int tag) {
 }
 
 void Communicator::upload_solution(Solution &solution) {
+    solution.init();
     int *msg = (int *)send_buffer;
-    int max_itr = solution.path.n_cities;
-    for (int i = 0; i < max_itr; ++i) {
+    for (int i = 0; i < n_cities; ++i) {
         msg[i] = solution.path.route[i];
     }
     double *plen = (double *)(send_buffer + length - sizeof(double));
@@ -46,8 +47,7 @@ void Communicator::upload_solution(Solution &solution) {
 void Communicator::download_solution(Solution &solution) {
     solution.init();
     int *msg = (int *)recv_buffer;
-    int max_itr = solution.path.n_cities;
-    for (int i = 0; i < max_itr; ++i) {
+    for (int i = 0; i < n_cities; ++i) {
         solution.path.route[i] = msg[i];
     }
     double *plen = (double *)(recv_buffer + length - sizeof(double));
