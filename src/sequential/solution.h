@@ -15,7 +15,6 @@ public:
     Solution(const Solution &solution);
     Solution& operator= (const Solution& solution);
     bool operator< (Solution& solution);
-    void update_pheromone(double **phero, double Q, Dataloader *dataloader);
     virtual ~Solution();
     void reset();
     double length;
