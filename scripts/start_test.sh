@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 rm ./output/*/*_profile
 for i in 1 2 4 8 16

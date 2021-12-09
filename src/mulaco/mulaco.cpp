@@ -19,7 +19,9 @@ void MulACO::solve(int max_itr) {
         random_place_ants();
         // update best route
         construct_routes(local_best);
-        communication(local_best);
+        if (i % 2 == 0) {
+            communication(local_best);
+        }
         update_pheromone(local_best);
     }
     collect_global_best();
