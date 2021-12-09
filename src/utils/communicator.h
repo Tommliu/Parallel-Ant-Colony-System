@@ -4,7 +4,9 @@
 
 #ifndef PARALLEL_ANT_COLONY_SYSTEM_COMMUNICATOR_H
 #define PARALLEL_ANT_COLONY_SYSTEM_COMMUNICATOR_H
+#pragma once
 #include "../sequential/solution.h"
+#include <mpi.h>
 
 class Communicator {
 public:
@@ -15,9 +17,12 @@ public:
 
     void send_msg(int destination, int tag);
     void receive_msg(int source, int tag);
+//    void send_async_msg(int destination, int tag);
+//    void receive_async_msg(int source, int tag);
     void broadcast_msg(int root);
     void upload_solution(Solution &solution);
     void download_solution(Solution &solution);
+    void download_from_broadcast(Solution &solution);
     char *get_send_buffer();
     char *get_recv_buffer();
 

@@ -18,6 +18,7 @@ public:
     bool operator< (Solution& solution);
     virtual ~Solution();
     void reset();
+    void print_solution();
     double length;
     Path path;
 };

@@ -32,7 +32,7 @@ public:
     void pheromone_decay();
     void write_output(const char* input_path, int n_core, double duration_time);
 
-    void solve(int max_itr);
+    virtual void solve(int max_itr);
 
     Solution global_best;
 

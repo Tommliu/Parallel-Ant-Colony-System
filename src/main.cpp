@@ -9,21 +9,19 @@
 #include "sequential/model.h"
 #include "sequential/timer.h"
 #include "paco/paco.h"
-#include "mpi.h"
+#include "mulaco/mulaco.h"
+#include <mpi.h>
 
 #define UNUSED __attribute__((unused))
 
 int main(int argc, char *argv[]) {
     char *input_filename = NULL;
     int opt = 0;
-    // for MPI usage
-//    int procID;
-//    int nproc;
 
     int number_of_ants = 200, max_iteration = 200;
     double alpha = 3.0, beta = 4.0, q = 100.0, rho = 0.3;
     int n_cores = 1;
-    int UNUSED mode = 0;
+    int mode = 0;
     Model *model = nullptr;
 
     // Read command line arguments
@@ -69,12 +67,10 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
-           input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
-    Timer timer;
     Dataloader dataloader;
     dataloader.load_data(input_filename);
 
+    int proc_id;
     switch (mode) {
         case 0:
             model = new Model(number_of_ants, alpha, beta, q, rho, &dataloader);
@@ -84,25 +80,43 @@ int main(int argc, char *argv[]) {
             model = new PACO(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
         case 2:
-//            MPI_Init(&argc, &argv);
-//            MPI_Comm_rank(MPI_COMM_WORLD, &procID);
-//            MPI_Comm_size(MPI_COMM_WORLD, &nproc);
-//            model = new MPIACO(number_of_ants, procID, nproc, alpha, beta, q, rho, max_iteration, &dataloader);
+            MPI_Init(NULL, NULL);
+            MPI_Comm_rank(MPI_COMM_WORLD, &proc_id);
+            MPI_Comm_size(MPI_COMM_WORLD, &n_cores);
+            model = new MulACO(number_of_ants, alpha, beta, q, rho, &dataloader, proc_id, n_cores);
+            break;
+        default:
+            printf("[ERROR]: No specific mode %d!\n", mode);
+            exit(127);
+    }
+
+    printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+           input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
+    Timer timer;
+    timer.start();
+    model->solve(max_iteration);
+    timer.end();
+
+
+    switch (mode) {
+        case 0:
+        case 1:
+            model->write_output(input_filename, n_cores, timer.get_duration_time());
+            printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
+            delete model;
+            break;
+        case 2:
+            if (proc_id == 0) {
+                model->write_output(input_filename, n_cores, timer.get_duration_time());
+                printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
+            }
+            delete model;
+            MPI_Finalize();
+            break;
         default:
             printf("[ERROR]: No specific mode!\n");
             exit(127);
     }
 
-    timer.start();
-    model->solve(max_iteration);
-    timer.end();
-    model->write_output(input_filename, n_cores, timer.get_duration_time());
-    delete model;
-//    if (mode == 2) {
-//        MPI_Finalize();
-//        printf("[FINISH]: proc %d with %lf seconds\n", procID, timer.get_duration_time());
-//    }
-
-    printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
     return 0;
 }

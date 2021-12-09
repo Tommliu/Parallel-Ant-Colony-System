@@ -26,7 +26,7 @@ Solution &Solution::operator=(const Solution &solution) {
 }
 
 void Solution::init(int number_of_cities) {
-    if (path.route) {
+    if (!path.route) {
         path.n_cities = number_of_cities;
         path.route = new int[path.n_cities];
     }
@@ -38,4 +38,11 @@ void Solution::reset() {
 bool Solution::operator< (Solution& solution) {
     if (length < solution.length) { return true; }
     else { return false; }
+}
+
+void Solution::print_solution() {
+    for (int i = 0; i < path.n_cities; ++i) {
+        printf("%d ", path.route[i]);
+    }
+    printf("\n");
 }
