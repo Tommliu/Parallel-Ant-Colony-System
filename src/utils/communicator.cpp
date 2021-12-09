@@ -8,17 +8,11 @@ Communicator::Communicator() {
     send_buffer = nullptr;
 }
 
-Communicator::Communicator(size_t msg_length, int number_of_cities) {
+void Communicator::init(size_t msg_length, int number_of_cities) {
     length = msg_length;
     n_cities = number_of_cities + 1;
     recv_buffer = new char[length];
     send_buffer = new char[length];
-}
-
-void Communicator::init(size_t length) {
-    length = msg_len;
-    recv_buffer = new char[msg_len];
-    send_buffer = new char[msg_len];
 }
 
 Communicator::~Communicator() {
