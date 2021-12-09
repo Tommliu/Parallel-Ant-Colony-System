@@ -49,8 +49,8 @@ def plot(positions, dimension, distance, filename):
     fig.set_size_inches(16, 8)
     ax[0].set_title(dataset + ' Raw nodes')
     ax[1].set_title(model + ' Optimized tour')
-    ax[0].scatter(positions[:, 0], positions[:, 1])             # plot A
-    ax[1].scatter(positions[:, 0], positions[:, 1])             # plot B
+    ax[0].scatter(positions[:, 0], positions[:, 1], s=4, c='r')             # plot A
+    ax[1].scatter(positions[:, 0], positions[:, 1], s=4, c='r')             # plot B
     start_node = 0
     for i in range(dimension):
         start_pos = positions[i]
@@ -58,7 +58,7 @@ def plot(positions, dimension, distance, filename):
         ax[1].annotate("",
                 xy=start_pos, xycoords='data',
                 xytext=end_pos, textcoords='data',
-                arrowprops=dict(arrowstyle="->",
+                arrowprops=dict(arrowstyle="-",
                                 connectionstyle="arc3"))
 
     textstr = "N nodes: %d\nTotal length: %.3f" % (dimension, distance)
