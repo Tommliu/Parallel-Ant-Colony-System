@@ -11,6 +11,11 @@ from matplotlib import pyplot as plt
 #Solution starts from line 3
 data_line = 3
 
+model_map = {0 : "Sequential ACO", 
+             1 : "OpenMp ACO", 
+             2 : "OpenMPI ACO", 
+             3 : "Multi-colony ACO (Ring)"}
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="Specify the ACO output file")
@@ -33,11 +38,17 @@ def save_image(dataset, filename):
     plt.savefig(path + filename + '.png', dpi=200)
 
 
-def plot(positions, dimension, distance, dataset, filename):
+def plot(positions, dimension, distance, filename):
+    tokens = filename.split('_')
+    dataset = token[0]
+    m_idx = int(token[1])
+    cores = int(token[2])
+    model = model_map[m_idx]
+
     fig, ax = plt.subplots(2, sharex=True, sharey=True)         # Prepare 2 plots
     fig.set_size_inches(16, 8)
     ax[0].set_title(dataset + ' Raw nodes')
-    ax[1].set_title(dataset + ' Optimized tour')
+    ax[1].set_title(model + ' Optimized tour')
     ax[0].scatter(positions[:, 0], positions[:, 1])             # plot A
     ax[1].scatter(positions[:, 0], positions[:, 1])             # plot B
     start_node = 0
@@ -61,7 +72,6 @@ def plot(positions, dimension, distance, dataset, filename):
 def main(args):
     filepath = args.file
     filename = filepath.strip().split('/')[-1]
-    dataset = filepath.strip().split('/')[-2]
     output_file = open(args.file, 'r')
     lines = output_file.readlines()
 
@@ -72,7 +82,7 @@ def main(args):
     
     # Plot the TSP
     positions = extract(lines, dimension)
-    plot(positions, dimension, distance, dataset, filename)
+    plot(positions, dimension, distance, filename)
 
 
 if __name__ == "__main__":
