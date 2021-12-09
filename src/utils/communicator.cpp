@@ -28,8 +28,16 @@ void Communicator::receive_msg(int source, int tag) {
     MPI_Recv(recv_buffer, length, MPI_BYTE, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
 
+//void Communicator::receive_async_msg(int source, int tag) {
+//    MPI_Irecv(recv_buffer, length, MPI_BYTE, source, tag, MPI_COMM_WORLD, &rq_recv);
+//}
+//
+//void Communicator::send_async_msg(int destination, int tag) {
+//    MPI_Isend(send_buffer, length, MPI_BYTE, destination, tag, int comm, MPI_COMM_WORLD, &rq_send);
+//}
+
 void Communicator::upload_solution(Solution &solution) {
-    // solution.init();
+    solution.init(n_cities);
     int *msg = (int *)send_buffer;
     for (int i = 0; i < n_cities; ++i) {
         msg[i] = solution.path.route[i];
@@ -39,7 +47,7 @@ void Communicator::upload_solution(Solution &solution) {
 }
 
 void Communicator::download_solution(Solution &solution) {
-    // solution.init();
+    solution.init(n_cities);
     int *msg = (int *)recv_buffer;
     if (solution.path.route == nullptr) printf("Check the init functiokn of Solution\n");
     for (int i = 0; i < n_cities; ++i) {
@@ -50,7 +58,7 @@ void Communicator::download_solution(Solution &solution) {
 }
 
 void Communicator::download_from_broadcast(Solution &solution) {
-    // solution.init();
+    solution.init(n_cities);
     int *msg = (int *)send_buffer;
     int max_itr = solution.path.n_cities;
     for (int i = 0; i < max_itr; ++i) {

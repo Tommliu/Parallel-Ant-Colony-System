@@ -19,6 +19,14 @@ $(BUILD)/obj/%.o: src/sequential/%.cpp
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
+$(BUILD)/obj/%.o: src/mpiaco/%.cpp
+	$(QUIET_ECHO) $@: Compiling object
+	@ mkdir -p $(dir $(BUILD)/dep/$<)
+	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
+        -o $(BUILD)/dep/$(<:%.cpp=%.d) -c $<
+	@ mkdir -p $(dir $@)
+	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
+
 $(BUILD)/obj/%.o: src/paco/%.cpp
 	$(QUIET_ECHO) $@: Compiling object
 	@ mkdir -p $(dir $(BUILD)/dep/$<)
@@ -27,7 +35,7 @@ $(BUILD)/obj/%.o: src/paco/%.cpp
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
-$(BUILD)/obj/%.o: src/mpiaco/%.cpp
+$(BUILD)/obj/%.o: src/mulaco/%.cpp
 	$(QUIET_ECHO) $@: Compiling object
 	@ mkdir -p $(dir $(BUILD)/dep/$<)
 	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
@@ -59,13 +67,15 @@ OBJS = $(BUILD)/obj/dataloader.o \
 	   $(BUILD)/obj/model.o \
 	   $(BUILD)/obj/paco.o \
 	   $(BUILD)/obj/mpiaco.o \
-	   $(BUILD)/obj/communicator.o \
+	   $(BUILD)/obj/mulaco.o \
 	   $(BUILD)/obj/ant.o \
 	   $(BUILD)/obj/path.o \
 	   $(BUILD)/obj/random.o \
 	   $(BUILD)/obj/tabu.o \
 	   $(BUILD)/obj/timer.o \
 	   $(BUILD)/obj/solution.o \
+	   $(BUILD)/obj/communicator.o \
+	   $(BUILD)/obj/topology.o \
        $(BUILD)/obj/main.o
 
 $(BUILD)/bin/$(APP_NAME): $(OBJS)

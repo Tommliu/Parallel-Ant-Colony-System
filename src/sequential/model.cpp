@@ -65,6 +65,7 @@ void Model::random_place_ants() {
 }
 
 void Model::construct_routes(Solution &local_best) {
+    local_best.init(n_cities+1);
     local_best.reset();
     for (int i = 0; i < n_ants; ++i) {
         for (int j = 1; j < n_cities; ++j) {

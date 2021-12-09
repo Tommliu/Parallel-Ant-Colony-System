@@ -22,6 +22,7 @@ void PACO::construct_routes(Solution &local_best) {
 #pragma omp declare reduction \
         (minLength:Solution:omp_out=better_solution(omp_out, omp_in)) \
         initializer(omp_priv = Solution())
+    local_best.init(n_cities+1);
     local_best.reset();
 #pragma omp parallel for reduction(minLength: local_best)
     for (int i = 0; i < n_ants; ++i) {
