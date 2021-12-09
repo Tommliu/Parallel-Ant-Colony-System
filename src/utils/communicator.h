@@ -5,6 +5,7 @@
 #ifndef PARALLEL_ANT_COLONY_SYSTEM_COMMUNICATOR_H
 #define PARALLEL_ANT_COLONY_SYSTEM_COMMUNICATOR_H
 #include "../sequential/solution.h"
+#include "mpi.h"
 
 class Communicator {
 public:
@@ -18,6 +19,7 @@ public:
     void broadcast_msg(int root);
     void upload_solution(Solution &solution);
     void download_solution(Solution &solution);
+    void download_from_broadcast(Solution &solution);
     char *get_send_buffer();
     char *get_recv_buffer();
 

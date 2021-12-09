@@ -24,12 +24,12 @@ void Communicator::send_msg(int destination, int tag) {
     MPI_Send(send_buffer, length, MPI_BYTE, destination, tag, MPI_COMM_WORLD);
 }
 
-char *Communicator::receive_msg(int source, int tag) {
+void Communicator::receive_msg(int source, int tag) {
     MPI_Recv(recv_buffer, length, MPI_BYTE, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 }
 
 void Communicator::upload_solution(Solution &solution) {
-    solution.init();
+    // solution.init();
     int *msg = (int *)send_buffer;
     for (int i = 0; i < n_cities; ++i) {
         msg[i] = solution.path.route[i];
@@ -39,8 +39,9 @@ void Communicator::upload_solution(Solution &solution) {
 }
 
 void Communicator::download_solution(Solution &solution) {
-    solution.init();
+    // solution.init();
     int *msg = (int *)recv_buffer;
+    if (solution.path.route == nullptr) printf("Check the init functiokn of Solution\n");
     for (int i = 0; i < n_cities; ++i) {
         solution.path.route[i] = msg[i];
     }
@@ -49,7 +50,7 @@ void Communicator::download_solution(Solution &solution) {
 }
 
 void Communicator::download_from_broadcast(Solution &solution) {
-    solution.init();
+    // solution.init();
     int *msg = (int *)send_buffer;
     int max_itr = solution.path.n_cities;
     for (int i = 0; i < max_itr; ++i) {

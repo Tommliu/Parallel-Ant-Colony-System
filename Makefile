@@ -1,7 +1,7 @@
 BUILD = build
 QUIET_ECHO = @ echo
 APP_NAME = aco
-CXX = g++ -m64 -std=c++11
+CXX = mpic++ -m64 -std=c++11
 CXXFLAGS = -I. -O3 -Wall -fopenmp -Wno-unknown-pragmas
 
 
@@ -27,6 +27,22 @@ $(BUILD)/obj/%.o: src/paco/%.cpp
 	@ mkdir -p $(dir $@)
 	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
 
+$(BUILD)/obj/%.o: src/mpiaco/%.cpp
+	$(QUIET_ECHO) $@: Compiling object
+	@ mkdir -p $(dir $(BUILD)/dep/$<)
+	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
+        -o $(BUILD)/dep/$(<:%.cpp=%.d) -c $<
+	@ mkdir -p $(dir $@)
+	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
+
+$(BUILD)/obj/%.o: src/utils/%.cpp
+	$(QUIET_ECHO) $@: Compiling object
+	@ mkdir -p $(dir $(BUILD)/dep/$<)
+	@ $(CXX) $(CXXFLAGS) -M -MG -MQ $@ -DCOMPILINGDEPENDENCIES \
+        -o $(BUILD)/dep/$(<:%.cpp=%.d) -c $<
+	@ mkdir -p $(dir $@)
+	@ $(CXX) $(CXXFLAGS) -o $@ -c $<
+
 $(BUILD)/obj/main.o: src/main.cpp
 	$(QUIET_ECHO) $@: Compiling object
 	@ mkdir -p $(dir $(BUILD)/dep/$<)
@@ -42,6 +58,8 @@ $(APP_NAME): $(BUILD)/bin/$(APP_NAME)
 OBJS = $(BUILD)/obj/dataloader.o \
 	   $(BUILD)/obj/model.o \
 	   $(BUILD)/obj/paco.o \
+	   $(BUILD)/obj/mpiaco.o \
+	   $(BUILD)/obj/communicator.o \
 	   $(BUILD)/obj/ant.o \
 	   $(BUILD)/obj/path.o \
 	   $(BUILD)/obj/random.o \

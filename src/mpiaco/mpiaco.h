@@ -3,7 +3,6 @@
 #pragma once
 #include "../sequential/model.h"
 #include "../utils/communicator.h"
-#include <string.h>
 #include "mpi.h"
 
 class MPIACO : public Model {
@@ -12,7 +11,7 @@ public:
             double initial_rho, int max_iteration, Dataloader *p_dataloader);
     ~MPIACO();
     void init_comm(Dataloader *p_dataloader);
-    void update_pheromone();
+    void update_pheromone(Solution &local_best);
 
     int myrank;
     int nproc_;

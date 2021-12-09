@@ -18,7 +18,7 @@ void MPIACO::init_comm(Dataloader *p_dataloader) {
     int n_cites = p_dataloader->n_cities;
     int length = n_cites + 1;
     size_t msg_length = length * sizeof(int) + sizeof(double);  // (int[n_cites + 1], double)
-    comm.init(msg_length);
+    comm.init(msg_length, n_cites);
 }
 
 
@@ -26,6 +26,7 @@ void MPIACO::update_pheromone(Solution &local_best) {
     Solution best_soln = local_best;
     if (myrank == 0) {
         Solution recv_soln;
+        recv_soln.init(n_cities + 1);
         for (int i = 1; i < nproc_; i++) {
             comm.receive_msg(i, 0);
             comm.download_solution(recv_soln);
@@ -33,19 +34,20 @@ void MPIACO::update_pheromone(Solution &local_best) {
                 best_soln = recv_soln;
             }
         }
+        comm.upload_solution(best_soln);
     } else {
-        comm.upload_solution(local_best)//to proc 0
+        comm.upload_solution(local_best);  // proc 0
         comm.send_msg(0, 0);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
-    comm.upload_solution(best_soln);
-    comm.broadcast; // broadcast the best path
-    best_soln_sync = reinterpret_cast<Solution *>(sync_data);
-    best_soln_sync->update_pheromone(pheromone, q, dataloader);
-    if (*best_soln_sync < global_best) {
-        global_best = *best_soln_sync;
+    comm.broadcast_msg(0);       // broadcast the best path
+    comm.download_from_broadcast(best_soln);
+
+    if (best_soln < global_best) {
+        global_best = best_soln;
     }
-    Model::updat....
+    
+    Model::update_pheromone(best_soln);
 }
 
