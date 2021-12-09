@@ -35,7 +35,7 @@ def save_image(dataset, filename, profile_type='sp'):
 def plot_profile(lines, filename):
     tokens = filename.split('_')
     dataset = tokens[0]
-    m_idx = int(token[1])
+    m_idx = int(tokens[1])
     model = model_map[m_idx]
 
     baseline = float(lines[speedup_offset].split()[-1])
