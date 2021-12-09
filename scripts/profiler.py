@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 
+# This script is used to plot the speedup and best tour length
+
 import numpy as np
 import argparse
 import os
 from matplotlib import pyplot as plt
 
-# This script is used to plot the speedup ...
 n_cores = []
 n_cores_chars = []
 batch_size = 2
 speedup_offset = 0
 tour_length_offset = 1
-# other profile 
+
+model_map = {0 : "Sequential ACO", 
+             1 : "OpenMp ACO", 
+             2 : "OpenMPI ACO", 
+             3 : "Multi-colony ACO (Ring)"}
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -26,7 +32,12 @@ def save_image(dataset, filename, profile_type='sp'):
     plt.savefig(path + filename + '_' + profile_type + '.png', dpi=200)
 
 
-def plot_profile(lines, dataset, filename):
+def plot_profile(lines, filename):
+    tokens = filename.split('_')
+    dataset = tokens[0]
+    m_idx = int(token[1])
+    model = model_map[m_idx]
+
     baseline = float(lines[speedup_offset].split()[-1])
     speedups = []
     tour_lengths = []
@@ -44,7 +55,7 @@ def plot_profile(lines, dataset, filename):
     plt.xlabel('Cores')
     plt.ylabel('Speedup')
     plt.grid(True)
-    plt.title(dataset + ' Speedup')
+    plt.title(model + ' Speedup' + '(' + dataset + ')')
     for x_value, y_value in zip(n_cores, speedups):
         label = "{:.2f}".format(y_value)
         plt.annotate(label,(x_value, y_value), xytext=(0, 5), \
@@ -59,7 +70,7 @@ def plot_profile(lines, dataset, filename):
     plt.bar(n_cores_chars, tour_lengths)
     plt.xlabel('Cores')
     plt.ylabel('Best Tour Length')
-    plt.title(dataset + ' Tour Length')
+    plt.title(model + ' Tour Length' + '(' + dataset + ')')
     for x_value, y_value in zip(n_cores_chars, tour_lengths):
         label = "{:.2f}".format(y_value)
         plt.annotate(label,(x_value, y_value), xytext=(0, 5), \
@@ -73,12 +84,12 @@ def plot_profile(lines, dataset, filename):
 def main(args):
     filepath = args.file
     filename = filepath.strip().split('/')[-1]
-    dataset = filepath.strip().split('/')[-2]
+    # dataset = filepath.strip().split('/')[-2]
     profile = open(filepath, 'r')
     lines = profile.readlines()
     
     # plot profile
-    plot_profile(lines, dataset, filename)
+    plot_profile(lines, filename)
 
 
 if __name__ == '__main__':
