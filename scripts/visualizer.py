@@ -40,9 +40,9 @@ def save_image(dataset, filename):
 
 def plot(positions, dimension, distance, filename):
     tokens = filename.split('_')
-    dataset = token[0]
-    m_idx = int(token[1])
-    cores = int(token[2])
+    dataset = tokens[0]
+    m_idx = int(tokens[1])
+    cores = int(tokens[2])
     model = model_map[m_idx]
 
     fig, ax = plt.subplots(2, sharex=True, sharey=True)         # Prepare 2 plots
