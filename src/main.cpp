@@ -108,14 +108,14 @@ int main(int argc, char *argv[]) {
     switch (mode) {
         case 0:
         case 1:
-            model->write_output(input_filename, n_cores, timer.get_duration_time());
+            model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
             printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
             delete model;
             break;
         case 2:
         case 3:
             if (proc_id == 0) {
-                model->write_output(input_filename, n_cores, timer.get_duration_time());
+                model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
                 printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
             }
             delete model;

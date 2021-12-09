@@ -30,7 +30,7 @@ public:
     virtual void update_pheromone(Solution &solution);
     Solution& better_solution(Solution& x, Solution& y);
     void pheromone_decay();
-    void write_output(const char* input_path, int n_core, double duration_time);
+    void write_output(const char* input_path, int n_core, double duration_time, int mode);
 
     virtual void solve(int max_itr);
 
