@@ -46,11 +46,11 @@ def plot(positions, dimension, distance, filename):
     model = model_map[m_idx]
 
     fig, ax = plt.subplots(2, sharex=True, sharey=True)         # Prepare 2 plots
-    fig.set_size_inches(16, 8)
+    fig.set_size_inches(80, 40)
     ax[0].set_title(dataset + ' Raw nodes')
     ax[1].set_title(model + ' Optimized tour')
-    ax[0].scatter(positions[:, 0], positions[:, 1], s=4, c='r')             # plot A
-    ax[1].scatter(positions[:, 0], positions[:, 1], s=4, c='r')             # plot B
+    ax[0].scatter(positions[:, 0], positions[:, 1], s=0.5, c='r')             # plot A
+    ax[1].scatter(positions[:, 0], positions[:, 1], s=0.5, c='r')             # plot B
     start_node = 0
     for i in range(dimension):
         start_pos = positions[i]
@@ -59,7 +59,7 @@ def plot(positions, dimension, distance, filename):
                 xy=start_pos, xycoords='data',
                 xytext=end_pos, textcoords='data',
                 arrowprops=dict(arrowstyle="-",
-                                connectionstyle="arc3"))
+                                connectionstyle="arc3",lw=0.5))
 
     textstr = "N nodes: %d\nTotal length: %.3f" % (dimension, distance)
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)

@@ -31,12 +31,12 @@ public:
     Solution& better_solution(Solution& x, Solution& y);
     void pheromone_decay();
     void write_output(const char* input_path, int n_core, double duration_time, int mode);
-
+    int get_phero_loc(int i, int j);
     virtual void solve(int max_itr);
 
     Solution global_best;
 
-    int n_ants, n_cities;
+    int n_ants, n_cities, N; // N = 2*n_cities-3
     /**
      * alpha is Evaporation parameter
      * beta is Expectation Heuristic Factor
@@ -45,7 +45,7 @@ public:
      * tau is
      * */
     double alpha, beta, q, rho, tau, decay_rate;
-    double **pheromone;
+    double *pheromone;
     Dataloader *dataloader;
     Random random;
     Ant *ants;

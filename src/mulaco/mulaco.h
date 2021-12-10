@@ -13,12 +13,12 @@
 class MulACO: public Model{
 public:
     MulACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q,
-           double initial_rho, Dataloader *p_dataloader, int proc_id, int number_of_proc);
+           double initial_rho, Dataloader *p_dataloader, int proc_id, int number_of_proc, int freq);
     ~MulACO();
     void solve(int max_itr);
     void communication(Solution &local_best);
     void collect_global_best();
-    int rank, nproc;
+    int rank, nproc, frequency;
     Communicator communicator;
     Topology ring;
 };

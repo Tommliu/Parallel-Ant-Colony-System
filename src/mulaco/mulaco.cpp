@@ -3,12 +3,13 @@
 //
 
 #include "mulaco.h"
-MulACO::MulACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q, double initial_rho, Dataloader *p_dataloader, int proc_id, int number_of_proc) : Model(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader) {
+MulACO::MulACO(int number_of_ants, double initial_alpha, double initial_beta, double initial_q, double initial_rho, Dataloader *p_dataloader, int proc_id, int number_of_proc, int freq) : Model(number_of_ants, initial_alpha, initial_beta, initial_q, initial_rho, p_dataloader) {
     size_t msg_length = (n_cities + 1) * sizeof(int) + sizeof(double);
     communicator.init(msg_length, n_cities);
     rank = proc_id;
     ring.init(number_of_proc);
     nproc = number_of_proc;
+    frequency = freq;
 }
 MulACO::~MulACO(){}
 
@@ -19,7 +20,7 @@ void MulACO::solve(int max_itr) {
         random_place_ants();
         // update best route
         construct_routes(local_best);
-        if (i % 2 == 0) {
+        if (i % frequency == 0) {
             communication(local_best);
         }
         update_pheromone(local_best);

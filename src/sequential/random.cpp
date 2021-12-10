@@ -15,7 +15,7 @@ int Random::get_initial_city(int n_cities) {
 
 // TODO: generate next city base on the tabu list
 int Random::get_next_city(Ant *ant, int start, int n_cities, Dataloader *dataloader,
-                          double **phero, double alpha, double beta) {
+                          double *phero, double alpha, double beta) {
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> distribution(0.0, 1.0);

@@ -23,11 +23,12 @@ int main(int argc, char *argv[]) {
     double alpha = 3.0, beta = 4.0, q = 100.0, rho = 0.3;
     int n_cores = 1;
     int mode = 0;
+    int freq = 2; // frequency
     Model *model = nullptr;
 
     // Read command line arguments
     do {
-        opt = getopt(argc, argv, "f:a:b:q:r:n:i:c:m:");
+        opt = getopt(argc, argv, "f:a:b:q:r:n:i:c:m:y:");
         switch (opt) {
             case 'f':
                 input_filename = optarg;
@@ -56,6 +57,9 @@ int main(int argc, char *argv[]) {
             case 'm':
                 mode = atoi(optarg);
                 break;
+            case 'y':
+                freq = atoi(optarg);
+                break;
             case -1:
                 break;
             default:
@@ -71,12 +75,16 @@ int main(int argc, char *argv[]) {
     Dataloader dataloader;
     dataloader.load_data(input_filename);
 
-    int proc_id;
+    int proc_id = 0;
     switch (mode) {
         case 0:
+            printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+                   input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
             model = new Model(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
         case 1:
+            printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+                   input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
             omp_set_num_threads(n_cores);
             model = new PACO(number_of_ants, alpha, beta, q, rho, &dataloader);
             break;
@@ -84,21 +92,27 @@ int main(int argc, char *argv[]) {
            MPI_Init(&argc, &argv);
            MPI_Comm_rank(MPI_COMM_WORLD, &proc_id);
            MPI_Comm_size(MPI_COMM_WORLD, &n_cores);
+           if (proc_id == 0) {
+               printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+                      input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
+           }
            model = new MPIACO(number_of_ants, proc_id, n_cores, alpha, beta, q, rho, max_iteration, &dataloader);
            break;
         case 3:
             MPI_Init(NULL, NULL);
             MPI_Comm_rank(MPI_COMM_WORLD, &proc_id);
             MPI_Comm_size(MPI_COMM_WORLD, &n_cores);
-            model = new MulACO(number_of_ants, alpha, beta, q, rho, &dataloader, proc_id, n_cores);
+            if (proc_id == 0) {
+                printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
+                       input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
+            }
+            model = new MulACO(number_of_ants, alpha, beta, q, rho, &dataloader, proc_id, n_cores, freq);
             break;
         default:
             printf("[ERROR]: No specific mode %d!\n", mode);
             exit(127);
     }
 
-    printf("[RUNNING]: %s using mode %d with %d cores, (a, b, q, r, n, i) = (%f,%f,%f,%f,%d,%d)\n",
-           input_filename, mode, n_cores, alpha, beta, q, rho, number_of_ants, max_iteration);
     Timer timer;
     timer.start();
     model->solve(max_iteration);
@@ -109,14 +123,14 @@ int main(int argc, char *argv[]) {
         case 0:
         case 1:
             model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
-            printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
+            printf("[FINISH]: %s using mode %d with %d cores with %lf seconds\n", input_filename, mode, n_cores, timer.get_duration_time());
             delete model;
             break;
         case 2:
         case 3:
             if (proc_id == 0) {
                 model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
-                printf("[FINISH]: %s with %lf seconds\n", input_filename, timer.get_duration_time());
+                printf("[FINISH]: %s using mode %d with %d cores with %lf seconds\n", input_filename, mode, n_cores, timer.get_duration_time());
             }
             delete model;
             MPI_Finalize();

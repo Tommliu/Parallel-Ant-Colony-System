@@ -10,6 +10,7 @@ void Model::init(double initial_alpha, double initial_beta, double initial_q, do
                  Dataloader *p_dataloader) {
 
     n_cities = p_dataloader->n_cities;
+    N = n_cities * 2 - 3;
     alpha = initial_alpha;
     beta = initial_beta;
     q = initial_q;
@@ -17,16 +18,11 @@ void Model::init(double initial_alpha, double initial_beta, double initial_q, do
     decay_rate = 1.0 - rho;
 
     dataloader = p_dataloader;
-    pheromone = new double* [n_cities];
+    int phero_len = n_cities * (n_cities - 1) / 2;
+    pheromone = new double [phero_len];
 
-    for (int i = 0; i < n_cities; i++) {
-        pheromone[i] = new double [n_cities];
-
-        for (int j = 0; j < i; j++) {
-            pheromone[i][j] = 1.0;
-            pheromone[j][i] = 1.0;
-        }
-        pheromone[i][i] = 0.0;
+    for (int i = 0; i < phero_len; i++) {
+        pheromone[i] = 1.0;
     }
 }
 
@@ -43,9 +39,6 @@ Model::Model(int number_of_ants, double initial_alpha, double initial_beta, doub
 }
 
 Model::~Model() {
-    for (int i = 0; i < n_cities; i++) {
-        delete [] pheromone[i];
-    }
     delete [] pheromone;
 
     for (int i = 0; i < n_ants; ++i) {
@@ -85,9 +78,11 @@ void Model::construct_routes(Solution &local_best) {
 
 // TODO: related to cache miss for multi-threads.
 void Model::pheromone_decay() {
+    int loc = 0;
     for (int i = 0; i < n_cities; ++i) {
-        for (int j = 0; j < n_cities; ++j) {
-            pheromone[i][j] *= decay_rate;
+        for (int j = i + 1; j < n_cities; ++j) {
+            loc = get_phero_loc(i, j);
+            pheromone[loc] *= decay_rate;
         }
     }
 }
@@ -101,11 +96,12 @@ void Model::update_pheromone(Solution &solution) {
     pheromone_decay();
 
     int max_itr = solution.path.n_cities;
+    int loc = 0;
     for (int i = 1; i < max_itr; ++i) {
         int start = solution.path.route[i-1];
         int end = solution.path.route[i];
-        pheromone[start][end] +=  q / solution.length;
-        pheromone[end][start] = pheromone[start][end];
+        loc = get_phero_loc(start, end);
+        pheromone[loc] +=  q / solution.length;
     }
 }
 
@@ -170,4 +166,20 @@ void Model::write_output(const char* input_path, int n_cores, double duration_ti
         fprintf(fp, "%d %d\n", tmp.x, tmp.y);
     }
     fclose(fp);
+}
+
+int Model::get_phero_loc(int i, int j) {
+    if (i == j) {
+        printf("[ERROR]: get_phero_loc(%d,%d)\n", i, j);
+        return -1;
+    }
+    int x, y;
+    if (i < j) {
+        x = i;
+        y = j;
+    } else {
+        x = j;
+        y = i;
+    }
+    return (N - x) * x / 2 + y - x;
 }

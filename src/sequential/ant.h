@@ -17,13 +17,15 @@ public:
     void visit_city(int index, int city);
     void reset();
     double get_length(Dataloader *dataloader);
+    int get_phero_loc(int i, int j);
     void update_probe(int start, int n_cities, Dataloader *dataloader,
-                      double **phero, double alpha, double beta);
+                      double *phero, double alpha, double beta);
     virtual ~Ant();
 
     Path path;
     Tabu tabu_list;
     double *probe;
+    int N;
 };
 
 
