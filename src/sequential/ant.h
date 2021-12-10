@@ -19,7 +19,7 @@ public:
     double get_length(Dataloader *dataloader);
     int get_phero_loc(int i, int j);
     void update_probe(int start, int n_cities, Dataloader *dataloader,
-                      double *phero, double alpha, double beta);
+                      float *phero, double alpha, double beta);
     virtual ~Ant();
 
     Path path;

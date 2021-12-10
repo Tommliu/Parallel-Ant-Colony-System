@@ -47,7 +47,7 @@ int Ant::get_phero_loc(int i, int j) {
 }
 
 void Ant::update_probe(int start, int n_cities, Dataloader *dataloader,
-                       double *phero, double alpha, double beta) {
+                       float *phero, double alpha, double beta) {
     double sum = 0.0;
     for (int i = 0; i < n_cities; ++i) {
         if (tabu_list.is_visited(i)) {

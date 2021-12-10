@@ -45,7 +45,7 @@ public:
      * tau is
      * */
     double alpha, beta, q, rho, tau, decay_rate;
-    double *pheromone;
+    float *pheromone;
     Dataloader *dataloader;
     Random random;
     Ant *ants;

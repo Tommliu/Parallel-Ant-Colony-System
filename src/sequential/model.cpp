@@ -19,7 +19,7 @@ void Model::init(double initial_alpha, double initial_beta, double initial_q, do
 
     dataloader = p_dataloader;
     int phero_len = n_cities * (n_cities - 1) / 2;
-    pheromone = new double [phero_len];
+    pheromone = new float [phero_len];
 
     for (int i = 0; i < phero_len; i++) {
         pheromone[i] = 1.0;
