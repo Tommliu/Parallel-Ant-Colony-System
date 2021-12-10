@@ -16,6 +16,7 @@
 #include "path.h"
 #include "random.h"
 #include "solution.h"
+#include "../utils/timer.h"
 
 class Model {
 public:
@@ -49,5 +50,7 @@ public:
     Dataloader *dataloader;
     Random random;
     Ant *ants;
+    Timer place_ants, cons_routes, update_phero, communication_time;
+    ;
 };
 #endif //PARALLEL_ANT_COLONY_SYSTEM_MODEL_H

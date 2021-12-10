@@ -108,10 +108,17 @@ void Model::update_pheromone(Solution &solution) {
 void Model::solve(int max_iter) {
     Solution local_best;
     for (int i = 0; i < max_iter; ++i) {
+        place_ants.cum_start();
         random_place_ants();
+        place_ants.cum_end();
         // update best route
+        cons_routes.cum_start();
         construct_routes(local_best);
+        cons_routes.cum_end();
+
+        update_phero.cum_start();
         update_pheromone(local_best);
+        update_phero.cum_end();
     }
 }
 

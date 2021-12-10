@@ -17,13 +17,21 @@ void MulACO::solve(int max_itr) {
     Solution local_best;
     int cnt = 1;
     for (int i = 0; i < max_itr; ++i, ++cnt) {
+        place_ants.cum_start();
         random_place_ants();
+        place_ants.cum_end();
         // update best route
+        cons_routes.cum_start();
         construct_routes(local_best);
+        cons_routes.cum_end();
+        communication_time.cum_start();
         if (i % frequency == 0) {
             communication(local_best);
         }
+        communication_time.cum_end();
+        update_phero.cum_start();
         update_pheromone(local_best);
+        update_phero.cum_end();
     }
     collect_global_best();
 }

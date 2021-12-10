@@ -15,10 +15,14 @@ public:
     virtual ~Timer();
     void start();
     void end();
+    void cum_start();
+    void cum_end();
     double get_duration_time();
+    double get_cumulative_time();
 
     timer start_time;
     timer end_time;
+    double cumulative_time;
 };
 
 

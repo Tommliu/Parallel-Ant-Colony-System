@@ -7,7 +7,7 @@
 #include <omp.h>
 #include "sequential/dataloader.h"
 #include "sequential/model.h"
-#include "sequential/timer.h"
+#include "utils/timer.h"
 #include "mpiaco/mpiaco.h"
 #include "paco/paco.h"
 #include "mulaco/mulaco.h"
@@ -123,15 +123,20 @@ int main(int argc, char *argv[]) {
         case 0:
         case 1:
             model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
-            printf("[FINISH]: %s using mode %d with %d cores with %lf seconds\n", input_filename, mode, n_cores, timer.get_duration_time());
+            printf("[FINISH]: %s using mode %d with %d cores with %lf seconds, place ants time:%lf, construct routes time:%lf, update pheromone time:%lf \n",
+                   input_filename, mode, n_cores, timer.get_duration_time(),
+                   model->place_ants.get_cumulative_time(), model->cons_routes.get_cumulative_time(), model->update_phero.get_cumulative_time());
             delete model;
             break;
         case 2:
         case 3:
             if (proc_id == 0) {
                 model->write_output(input_filename, n_cores, timer.get_duration_time(), mode);
-                printf("[FINISH]: %s using mode %d with %d cores with %lf seconds\n", input_filename, mode, n_cores, timer.get_duration_time());
             }
+            printf("[FINISH]: %s using mode %d with %d cores with %lf seconds, place ants time:%lf, construct routes time:%lf, update pheromone time:%lf, communication time:%lf \n",
+                   input_filename, mode, n_cores, timer.get_duration_time(),
+                   model->place_ants.get_cumulative_time(), model->cons_routes.get_cumulative_time(),
+                   model->update_phero.get_cumulative_time(), model->communication_time.get_cumulative_time());
             delete model;
             MPI_Finalize();
             break;

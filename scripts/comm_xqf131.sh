@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 rm ./output/xqf131/*_profile
-n_cores=16
+n_cores=96
 n_ants=100
 iteration=512
 Q=200

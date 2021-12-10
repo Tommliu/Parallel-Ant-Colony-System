@@ -6,7 +6,7 @@ iteration=10
 Q=10000
 frequency=2
 # openmp and openmpi
-for i in 1 2 4 8 16
+for i in 1 2 4 8 16 32 64
 do
   # openmp mode=1
   ./build/bin/aco -f tests/xqd4966.tsp -m 1 -c $i -n $n_ants -i $iteration -q $Q

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 rm ./output/xql662/*_profile
-n_ants=1024
+n_ants=1152
 iteration=10
 Q=1000
 frequency=2
 # openmp and openmpi
-for i in 1 2 4 8 16
+for i in 1 2 4 8 16 32 64 96
 do
   # openmp mode=1
   ./build/bin/aco -f tests/xql662.tsp -m 1 -c $i -n $n_ants -i $iteration -q $Q
